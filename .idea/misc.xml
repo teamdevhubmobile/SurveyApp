@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/layout/activity_downloaded_survey.xml" value="0.25" />
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/layout/activity_downloaded_survey_ouestion.xml" value="0.25" />
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/layout/activity_forget_password.xml" value="0.2359375" />
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/layout/activity_login.xml" value="0.25" />
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/layout/activity_main.xml" value="0.2359375" />
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/layout/activity_splash.xml" value="0.25" />
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/layout/activity_survey_ouestions.xml" value="0.25" />
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/layout/app_bar_drawer.xml" value="0.25" />
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/layout/content_main.xml" value="0.25" />
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/layout/fragment_downloaded_survey.xml" value="0.25" />
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/layout/fragment_profile.xml" value="0.2359375" />
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/layout/fragment_survey_list.xml" value="0.25" />
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/layout/fragment_survey_list_questions.xml" value="0.25" />
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/layout/item_downloaded_question_layout.xml" value="0.25" />
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/layout/item_downloaded_questions_options_list.xml" value="0.25" />
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/layout/item_downloaded_survey_list.xml" value="0.25" />
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/layout/item_questions_layout.xml" value="0.25" />
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/layout/item_questions_options_list.xml" value="0.16799999999999998" />
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/layout/item_survey_list.xml" value="0.25" />
+        <entry key="..\:/Extracted_Code/SurveyApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.25" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
