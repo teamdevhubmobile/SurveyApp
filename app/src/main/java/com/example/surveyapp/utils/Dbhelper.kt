@@ -15,6 +15,7 @@ import com.google.gson.Gson
 
 class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, DATABASE_NAME ,null,1) {
 
+    var answer = ""
 
     override fun onCreate(db: SQLiteDatabase?) {
         val query = ("CREATE TABLE " + TABLE_NAME + " ("
@@ -153,14 +154,20 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
     @SuppressLint("Range")
     fun answerSubmit(qId : String, answer : String){
 
+        this.answer = answer
+
         try {
 
             val cv = ContentValues()
             cv.put(ANSWER,answer)
+           // cv.put(ID,qId)
 
             val db = this.readableDatabase
 
-            db.rawQuery("UPDATE "+ TABLE_NAME2 + " SET "+ ANSWER + " = '"+answer+"'   WHERE " + "questionID" + " = "+qId, null);
+            val updateString="UPDATE "+ TABLE_NAME2 + " SET "+ ANSWER + " = '"+answer+"'   WHERE " + "questionID" + " = "+qId
+            Log.e("TAG888", "answerSubmit: $updateString", )
+            db.execSQL(updateString);
+           // db.rawQuery("INSERT "+ TABLE_NAME2 + " SET "+ ANSWER + " = '"+answer+"'   WHERE " + "questionID" + " = "+qId, null);
 
 
             val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME2 WHERE questionID = $qId ", null)
@@ -170,7 +177,7 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
 
                 for (i in columnNames) {
                     // Assume every column is int
-                    Log.e("TAG", "answerSubmit: "+ cursor.getString( cursor.getColumnIndex("answer") ) )
+                    Log.e("TAG102", "answerSubmit: "+ cursor.getString( cursor.getColumnIndex("answer") ) )
                 }
             }
 

@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.example.surveyapp.utils.Dbhelper
-import com.example.surveyapp.response.DownloadedSurveyListModel
+import com.example.data.response.DownloadedSurveyListModel
 import com.example.surveyapp.adapter.DownloadedSurveyListRecyclerAdapter
 import com.example.surveyapp.R
 import com.example.surveyapp.databinding.SettingsActivityBinding
@@ -31,6 +31,13 @@ class DownloadedSurveyActivity : AppCompatActivity() {
 
         cursor!!.moveToFirst()
 
+        val Sno =  cursor.getString(cursor.getColumnIndex(Dbhelper.ID))
+        val name =  cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYNAME))
+        val id =  cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYID))
+
+//        val name =  cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYNAME))
+        var mylist = DownloadedSurveyListModel(Sno, name,id)
+        list.add(mylist)
 
         while(cursor.moveToNext()) {
             val Sno =  cursor.getString(cursor.getColumnIndex(Dbhelper.ID))

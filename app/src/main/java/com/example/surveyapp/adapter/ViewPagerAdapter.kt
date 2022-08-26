@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import com.example.surveyapp.*
@@ -16,6 +15,7 @@ import com.example.surveyapp.utils.Dbhelper
 class ViewPagerAdapter(private val mContext: Context, private val itemList: ArrayList<ResponseItem>,val listener :OptionsListenerInterface ) : PagerAdapter() {
     private var layoutInflater: LayoutInflater? = null
     val dbhelper  = Dbhelper(mContext,null)
+   // var submitList = arrayListOf<SubmitAnswersModel>()
 
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -26,7 +26,7 @@ class ViewPagerAdapter(private val mContext: Context, private val itemList: Arra
         val recycler: RecyclerView = view.findViewById(R.id.inner_question_recyclerview)
         textview.text = itemList[position].question.toString()
         idtextview.text = itemList[position].questionBankID+". ".toString()
-        Toast.makeText(mContext, "$textview", Toast.LENGTH_SHORT).show()
+       // Toast.makeText(mContext, "$textview", Toast.LENGTH_SHORT).show()
 
         itemList[position].option
 
@@ -34,6 +34,25 @@ class ViewPagerAdapter(private val mContext: Context, private val itemList: Arra
             recycler.adapter =
                 OptionsRecyclerAdapter(itemList[position].option as ArrayList<OptionItem>, mContext,listener,itemList[position].questionBankID.toString())
 
+        val answerlist= arrayListOf<String>()
+
+        for (item in itemList) {
+            answerlist.addAll(listOf(""+itemList[position].option as ArrayList<OptionItem>))
+
+            Log.e("TAG978", "answerlist: ${ answerlist.toString()}")
+
+            try {
+
+
+                container.addView(view, position)
+
+            }catch (e:Exception){
+                Log.e("TAG234324", "instantiateItem: $e", )
+            }
+            //  dbhelper.answerSubmit(item.questionId, item.item.name.toString())
+        }
+
+/*
 
                 dbhelper.addQuestion(
                     itemList[position].questionBankID.toString(),
@@ -41,20 +60,20 @@ class ViewPagerAdapter(private val mContext: Context, private val itemList: Arra
                     itemList[position].option as ArrayList<OptionItem>
 
                 )
+*/
 
-        try {
 
-
-            container.addView(view, position)
-            }catch (e:Exception){
-            Log.e("TAG234324", "instantiateItem: $e", )
-            }
             return view
 
     }
 
     override fun getCount(): Int {
         return itemList.size
+    }
+
+    fun getList() : ArrayList<ResponseItem>{
+
+        return itemList
     }
 
     override fun isViewFromObject(view: View, obj: Any): Boolean {

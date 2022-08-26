@@ -18,6 +18,7 @@ class LoginActivity : AppCompatActivity() {
     var myPreference = "MyPrefs"
     var name = "NameKey"
     var pass = "PassKey"
+    var loginuserID = ""
     var sharedPreferences: SharedPreferences? = null
 
 
@@ -29,19 +30,15 @@ class LoginActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         sharedPreferences = getSharedPreferences(myPreference, MODE_PRIVATE)
 
+        setObservers()
 
         binding.loginButton.setOnClickListener {
 
 
             viewModel.getLogin(binding.editTextTextPersonName.text.toString(), binding.editTextTextPersonName2.text.toString())
-            val editor = sharedPreferences!!.edit()
-
-            editor.putString(name, binding.editTextTextPersonName.text.toString())
-            editor.putString(pass,  binding.editTextTextPersonName2.text.toString())
-            editor.commit()
 
 
-            setObservers()
+
 
             /*  val intent = Intent(this, MainActivity::class.java)
               startActivity(intent)
@@ -86,6 +83,13 @@ class LoginActivity : AppCompatActivity() {
             //showToast("succes")
 
             if (it != null) {
+                loginuserID = it.userdata?.loginuserID.toString()
+                val editor = sharedPreferences!!.edit()
+
+                editor.putString(name, binding.editTextTextPersonName.text.toString())
+                editor.putString(pass,  binding.editTextTextPersonName2.text.toString())
+                editor.putString("loginuserID",loginuserID)
+                editor.commit()
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()

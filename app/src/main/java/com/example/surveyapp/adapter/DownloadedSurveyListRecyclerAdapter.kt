@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.surveyapp.activity.DownloadedSurveyOuestionActivity
 import com.example.surveyapp.databinding.DownloadedListBinding
-import com.example.surveyapp.response.DownloadedSurveyListModel
+import com.example.data.response.DownloadedSurveyListModel
 import com.example.surveyapp.utils.Dbhelper
 
 class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<DownloadedSurveyListModel>, val context : Context

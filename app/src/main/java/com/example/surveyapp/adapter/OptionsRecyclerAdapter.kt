@@ -50,6 +50,7 @@ class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Con
         holder.binding.checkbox.setOnClickListener { view ->
             selectedPosition = holder.adapterPosition
 
+            mList[position].answers = mList[position].name
 
             listener.onOptionClick(mList[position],qId)
            // Toast.makeText(context, "${holder.binding.checkbox.text.toString()}", Toast.LENGTH_SHORT).show()
@@ -68,17 +69,6 @@ class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Con
         else {
             holder.binding.checkbox.setChecked(false)
         }
-
-
-
-
-
-//                if (selectedPosition == position) {
-//                Toast.makeText(context, ""+holder.binding.checkbox.getText().toString(), Toast.LENGTH_SHORT).show()
-//            }
-//
-//            Toast.makeText(context, ""+holder.binding.checkbox.getText().toString(), Toast.LENGTH_SHORT).show()
-
 
     }
 

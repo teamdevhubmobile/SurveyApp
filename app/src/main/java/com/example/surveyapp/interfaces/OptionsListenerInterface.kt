@@ -5,4 +5,5 @@ import com.example.surveyapp.OptionItem
 interface OptionsListenerInterface {
 
     fun onOptionClick(item: OptionItem,qId : String)
+    fun onSurveyId(surveyId : String)
 }

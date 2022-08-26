@@ -28,9 +28,11 @@ data class QuestionWithOptionResponse2(
 
    data class OptionItem(
 
-	@field:SerializedName("name")
+	   @field:SerializedName("name")
 	val name: String? = null,
 
-	@field:SerializedName("optionID")
-	val optionID: String? = null
+	   @field:SerializedName("optionID")
+	val optionID: String? = null,
+
+	   var answers: String? = null
 )

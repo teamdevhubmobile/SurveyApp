@@ -1,44 +1,44 @@
-package com.example.surveyapp.response
+package com.example.data.response
 
 import com.google.gson.annotations.SerializedName
 
 data class ShowResponse(
 
 	@field:SerializedName("onlineExam")
-	val onlineExam: OnlineExam? = null,
+	val onlineExam1: ShowResponseOnlineExam? = null,
 
 	@field:SerializedName("onlineExamQuestions")
 	val onlineExamQuestions: List<OnlineExamQuestionsItem?>? = null,
 
 	@field:SerializedName("userExamCheck")
-	val userExamCheck: UserExamCheck? = null,
+	val userExamCheck: ShowResponseUserExamCheck? = null,
 
 	@field:SerializedName("questions")
-	val questions: Questions? = null,
+	val questions: ShowResponseQuestions? = null,
 
 	@field:SerializedName("options")
-	val options: Options? = null,
+	val options: ShowResponseOptions? = null,
 
 	@field:SerializedName("answers")
-	val answers: Answers? = null,
+	val answers: ShowResponseAnswers? = null,
 
 	@field:SerializedName("online_exam")
-	val onlineExam: OnlineExam? = null
+	val onlineExam: ShowResponseOnlineExam? = null
 )
 
-data class Questions(
+data class ShowResponseQuestions(
 
 	@field:SerializedName("6")
-	val jsonMember6: JsonMember6? = null,
+	val jsonMember6: ShowResponseJsonMember6? = null,
 
 	@field:SerializedName("7")
-	val jsonMember7: JsonMember7? = null,
+	val jsonMember7: ShowResponseJsonMember7? = null,
 
 	@field:SerializedName("8")
-	val jsonMember8: JsonMember8? = null
+	val jsonMember8: ShowResponseJsonMember8? = null
 )
 
-data class UserExamCheck(
+data class ShowResponseUserExamCheck(
 
 	@field:SerializedName("gender")
 	val gender: String? = null,
@@ -125,7 +125,7 @@ data class UserExamCheck(
 	val totalAnswer: String? = null
 )
 
-data class JsonMember8(
+data class ShowResponseJsonMember8(
 
 	@field:SerializedName("create_userID")
 	val createUserID: String? = null,
@@ -182,7 +182,7 @@ data class JsonMember8(
 	val totalQuestion: String? = null
 )
 
-data class JsonMember7(
+data class ShowResponseJsonMember7(
 
 	@field:SerializedName("create_userID")
 	val createUserID: String? = null,
@@ -239,13 +239,13 @@ data class JsonMember7(
 	val totalQuestion: String? = null
 )
 
-data class Options(
+data class ShowResponseOptions(
 
 	@field:SerializedName("6")
-	val jsonMember6: List<JsonMember6Item?>? = null
+	val jsonMember6: List<ShowResponseJsonMember6Item?>? = null
 )
 
-data class JsonMember6Item(
+data class ShowResponseJsonMember6Item(
 
 	@field:SerializedName("img")
 	val img: String? = null,
@@ -269,7 +269,7 @@ data class JsonMember6Item(
 	val text: Any? = null
 )
 
-data class JsonMember6(
+data class ShowResponseJsonMember6(
 
 	@field:SerializedName("create_userID")
 	val createUserID: String? = null,
@@ -326,7 +326,7 @@ data class JsonMember6(
 	val totalQuestion: String? = null
 )
 
-data class OnlineExamQuestionsItem(
+data class ShowResponseOnlineExamQuestionsItem(
 
 	@field:SerializedName("questionID")
 	val questionID: String? = null,
@@ -338,7 +338,7 @@ data class OnlineExamQuestionsItem(
 	val onlineExamQuestionID: String? = null
 )
 
-data class OnlineExam(
+data class ShowResponseOnlineExam(
 
 	@field:SerializedName("create_userID")
 	val createUserID: String? = null,
@@ -452,8 +452,8 @@ data class OnlineExam(
 	val validDays: String? = null
 )
 
-data class Answers(
+data class ShowResponseAnswers(
 
 	@field:SerializedName("6")
-	val jsonMember6: List<JsonMember6Item?>? = null
+	val jsonMember6: List<ShowResponseJsonMember6Item?>? = null
 )

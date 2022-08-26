@@ -6,7 +6,7 @@
 
         <variable
             name="model"
-            type="com.example.surveyapp.response.DownloadedSurveyListModel" />
+            type="com.example.data.response.DownloadedSurveyListModel" />
 
     </data>
 
