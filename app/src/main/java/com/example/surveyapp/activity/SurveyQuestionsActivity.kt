@@ -1,5 +1,7 @@
 package com.example.surveyapp.activity
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -47,6 +49,7 @@ class SurveyQuestionsActivity : AppCompatActivity(),OptionsListenerInterface {
     var address = ""
     var phone = ""
     var surveId = ""
+    var surveyName = ""
 
 
 
@@ -56,31 +59,44 @@ class SurveyQuestionsActivity : AppCompatActivity(),OptionsListenerInterface {
 
    // val testing = Gson().toJson(data)
 
+    @SuppressLint("Range")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_survey_ouestions)
 
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        sharedPreferences = getSharedPreferences("MyPrefs", AppCompatActivity.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
 
         surveId = intent.getStringExtra("surveyId").toString()
+        surveyName = intent.getStringExtra("surveyName").toString()
 
          s1 = sharedPreferences!!.getString("loginuserID","").toString()
 
       //  Toast.makeText(this, "$s1", Toast.LENGTH_SHORT).show()
 
+
+
         binding.fabBtn.setOnClickListener {
-          /*
-            val answerList= arrayListOf<HashMap<String,String>>()
+
+            dbhelper.addSurvey(surveId.toString(),surveyName.toString(),"this will show after uploaded",false,false)
+
+            Log.e("TAGid", "onCreate: ${dbhelper.servayPId}", )
+            var spid = dbhelper.servayPId.toInt()
+
+            //   dbhelper.addSurvey(mList[position].surveyId.toString(),mList[position].name.toString(),"this will show after uploaded")
+
+            /*val answerList= arrayListOf<HashMap<String,String>>()
 
             val answermap = hashMapOf<String, String>()
 
             for (item in responseList) {
 
+
                 val rnd1= Random.nextInt(50,80)
 
                 for (it in submitList){
                     if (it.questionId.equals(item.questionBankID)){
+
                         val data = intArrayOf(surveId.toInt()).contentToString()+intArrayOf(it.questionId.toInt()).contentToString()+intArrayOf(it.item.optionID!!.toInt()).contentToString()
 
                         val answerData="answer$data"
@@ -91,23 +107,30 @@ class SurveyQuestionsActivity : AppCompatActivity(),OptionsListenerInterface {
                 }
 
             }
+            Toast.makeText(this, "All Question Downloaded", Toast.LENGTH_SHORT).show()
 
 
-            val request= UploadAnswerRequest(
-                s1,"1",full_name,gender,phone,age,address
-            )
+                val request= UploadAnswerRequest(
+                    s1,"1",full_name,gender,phone,age,address
+                )
 
-            viewModel.getAnswerUploadPost( s1,"1",answermap,full_name,gender,phone,age,address)
+            viewModel.getAnswerUploadPost( s1,"1",answermap,full_name,gender,phone,age,address)*/
 
             if (!responseList.isNullOrEmpty()) {
 
+//                val cursor = dbhelper.getName()
+//                val spId =  cursor?.getInt(cursor.getColumnIndex(Dbhelper.ID))
+
                 for (i in 0 until responseList.size){
+
+
 
                     dbhelper.addQuestion(
 
                         responseList.get(i).questionBankID.toString(),
                         responseList.get(i).question.toString(),
-                        responseList.get(i).option as ArrayList<OptionItem>
+                        responseList.get(i).option as ArrayList<OptionItem>,
+                        spid,surveId.toInt()
 
                     )
                 }
@@ -115,50 +138,93 @@ class SurveyQuestionsActivity : AppCompatActivity(),OptionsListenerInterface {
             }else {
 
                 Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
-            }*/
+            }
             }
 
 
         binding.submitBtn.setOnClickListener {
 
-            val answerList= arrayListOf<HashMap<String,String>>()
-
             val answermap = hashMapOf<String, String>()
 
-            for (item in responseList) {
+            //*********//
 
-                val rnd1= Random.nextInt(50,80)
+            var newSList = mViewPagerAdapter.getList()
+
+            if (!newSList.isNullOrEmpty()){
+
+                for (item in newSList){
+
+                    var optionList = item.option
+
+                    var answer =""
+                    var opId =""
+                    var opPosition =""
+
+                    Log.e("TAGop", "onCreate: "+ item)
+
+                    for (op in optionList!!){
+                        Log.e("TAGop1", "onCreate: "+ op)
+                        if (!op?.answers.isNullOrEmpty()){
+                            answer = op?.answers.toString()
+                            opId = op?.optionID.toString()
+                            opPosition = op?.position.toString()
+
+                            val data = intArrayOf(surveId.toInt()).contentToString()+intArrayOf(item.questionBankID!!.toInt()).contentToString()+intArrayOf(opPosition.toInt()).contentToString()
+                            val answerData="answer$data"
+                            answermap.put(answerData,opId.toString())
+
+
+                        }
+
+                    }
+                  //  db.answerSubmit(item.questionBankID.toString(), answer,spid.toInt(),opId,opPosition)
+
+                }
+
+                viewModel.getAnswerUploadPost( s1,"1",answermap,full_name,gender,phone,age,address)
+
+
+            }else{
+                Toast.makeText(this, "Select Answer", Toast.LENGTH_SHORT).show()
+            }
+
+            //************//
+            Toast.makeText(this, "Submit Button Successfully", Toast.LENGTH_SHORT).show()
+
+           // val answermap = hashMapOf<String, String>()
+
+           /* for (item in responseList) {
+
 
                 for (it in submitList){
                     if (it.questionId.equals(item.questionBankID)){
-                        val data = intArrayOf(surveId.toInt()).contentToString()+intArrayOf(it.questionId.toInt()).contentToString()+intArrayOf(it.item.optionID!!.toInt()).contentToString()
+                        //val data = intArrayOf(surveId.toInt()).contentToString()+intArrayOf(it.questionId.toInt()).contentToString()+intArrayOf(it.item.optionID!!.toInt()).contentToString()
 
-                        val answerData="answer$data"
-                        Log.e("TAG2002", "Gson test: ${answerData}")
+                      //  val answerData="answer$data"
+                       // Log.e("TAG2002", "Gson test: ${answerData}")
 
-                        answermap.put(answerData, Random.nextInt(50,60).toString())
+                      //  answermap.put(answerData, Random.nextInt(50,60).toString())
                     }
                 }
 
             }
+            */
 
 
-            val request= UploadAnswerRequest(
-                s1,"1",full_name,gender,phone,age,address
-            )
-
-            viewModel.getAnswerUploadPost( s1,"1",answermap,full_name,gender,phone,age,address)
-
-            if (!responseList.isNullOrEmpty()) {
+           /* if (!responseList.isNullOrEmpty()) {
 
                 for (i in 0 until responseList.size){
+
+//                    val cursor = dbhelper.getName()
+//
+//                    val spId =  cursor?.getInt(cursor.getColumnIndex(Dbhelper.ID))
 
                     dbhelper.addQuestion(
 
                         responseList.get(i).questionBankID.toString(),
                         responseList.get(i).question.toString(),
-                        responseList.get(i).option as ArrayList<OptionItem>
-
+                        responseList.get(i).option as ArrayList<OptionItem>,
+                        1,1
                     )
                 }
 
@@ -166,6 +232,7 @@ class SurveyQuestionsActivity : AppCompatActivity(),OptionsListenerInterface {
 
                 Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
             }
+*/
 
             var myList = mViewPagerAdapter.getList()
 
@@ -282,37 +349,10 @@ class SurveyQuestionsActivity : AppCompatActivity(),OptionsListenerInterface {
         viewModel.getAnswerUploadLiveData()
             .observe(this@SurveyQuestionsActivity, Observer {
 
-                //showToast("succes")
-
                 if (it != null) {
 
                     Log.e("TAG", "this is iyt : $it")
 
-                   /* responseList = it.response as ArrayList<ResponseItem>
-
-
-                    // textListt =  it.response?.get() as ArrayList<OptionItem>
-
-                    mViewPagerAdapter = ViewPagerAdapter(this@SurveyQuestionsActivity,   it.response as ArrayList<ResponseItem>,this )
-                    viewPager.pageMargin = 15
-                    viewPager.setPadding(50, 0, 50, 0);
-                    viewPager.setClipToPadding(false)
-                    viewPager.setPageMargin(25)
-                    viewPager.adapter = mViewPagerAdapter
-                    viewPager.addOnPageChangeListener(viewPagerPageChangeListener)
-
-                    //textList =
-
-*/
-                /*
-
-
-                            binding.downloadQuestionfab.setOnClickListener {
-
-                            }
-*/
-
-                    // binding.questionsRecyclerview.adapter = RecyclerAdapterSurveyQuestions(it.response as ArrayList<ResponseItem>,this)
                 }
 
             })
@@ -321,8 +361,6 @@ class SurveyQuestionsActivity : AppCompatActivity(),OptionsListenerInterface {
 
         viewModel.getShowLiveData()
             .observe(this@SurveyQuestionsActivity, Observer {
-
-                //showToast("succes")
 
                 if (it != null) {
 
@@ -347,12 +385,6 @@ class SurveyQuestionsActivity : AppCompatActivity(),OptionsListenerInterface {
 
 
     override fun onOptionClick(item: OptionItem,qId: String) {
-
-//        answer = item.name.toString()
-//        this.qId = qId.toString()
-//
-//      //  Toast.makeText(this, "${item.name}", Toast.LENGTH_SHORT).show()
-//        Log.e("TAG9999", "onOptionClick: ${item.name+""+qId} ", )
 
     var model = SubmitAnswersModel(item,qId)
 

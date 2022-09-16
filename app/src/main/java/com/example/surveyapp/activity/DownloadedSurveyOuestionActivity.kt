@@ -1,11 +1,15 @@
 package com.example.surveyapp.activity
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.example.surveyapp.*
 import com.example.surveyapp.databinding.DownloadedSurveyQuestionActivityBinding
@@ -32,6 +36,17 @@ class DownloadedSurveyOuestionActivity : AppCompatActivity(),OptionsListenerInte
    var id = ""
     var question = ""
     var OId = ""
+    private lateinit var viewModel: HomeViewModel
+    var sharedPreferences: SharedPreferences? = null
+    var s1 = ""
+    var full_name = ""
+    var gender = ""
+    var age = ""
+    var address = ""
+    var phone = ""
+    var surveId = ""
+    var surveyName = ""
+
 
 
 
@@ -39,24 +54,70 @@ class DownloadedSurveyOuestionActivity : AppCompatActivity(),OptionsListenerInte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_downloaded_survey_ouestion)
+        viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
         val db = Dbhelper(this, null)
-        val cursor = db.getQuestion()
+
+        val sid = intent.getStringExtra("sid")
+        val spid = intent.getStringExtra("spid")
+
+        val cursor = db.getQuestion(spid!!.toInt())
 
         binding.submitBtn.setOnClickListener {
 
-            if (!submitList.isNullOrEmpty()) {
+            var newSList = mViewPagerAdapter.getList()
+
+            if (!newSList.isNullOrEmpty()){
+
+                for (item in newSList){
+
+                    var optionList = item.option
+
+                    var answer =""
+                    var opId =""
+                    var opPosition =""
+
+                    Log.e("TAGop", "onCreate: "+ item)
+
+                    for (op in optionList!!){
+                        Log.e("TAGop1", "onCreate: "+ op)
+                        if (!op?.answers.isNullOrEmpty()){
+                           answer = op?.answers.toString()
+                            opId = op?.optionID.toString()
+                            opPosition = op?.position.toString()
+                        }
+
+                    }
+                    db.answerSubmit(item.questionBankID.toString(), answer,spid.toInt(),opId,opPosition)
+
+                }
+
+                db.submitSurvey(spid.toInt(),1)
+
+                val intent = Intent(this,DownloadedSurveyActivity::class.java)
+                startActivity(intent)
+                finish()
+
+            }else{
+                Toast.makeText(this, "Select Answer", Toast.LENGTH_SHORT).show()
+            }
+
+            /*if (!submitList.isNullOrEmpty()) {
 
                 for (item in submitList) {
-                    Log.e("TAG97", "onCreate: ${item.questionId+ item.item.name.toString()}", )
-                    db.answerSubmit(item.questionId, item.item.name.toString())
+
+                    Log.e("TAG97", "onCreate: ${item.questionId+ item.item.name.toString()}",)
+
+
+
+                   // db.submitSurvey("1".toInt(),1)
 
                 }
             }else{
 
                 Toast.makeText(this, "Select Answer", Toast.LENGTH_SHORT).show()
 
-            }
+            }*/
         }
 
 
@@ -247,5 +308,55 @@ class DownloadedSurveyOuestionActivity : AppCompatActivity(),OptionsListenerInte
     override fun onSurveyId(surveyId: String) {
 
     }
+
+    private fun setObservers() {
+        observerShow()
+        observeUpdateQandA()
+    }
+
+
+    private fun observeUpdateQandA() {
+
+        viewModel.getAnswerUploadLiveData()
+            .observe(this@DownloadedSurveyOuestionActivity, Observer {
+
+                //showToast("succes")
+
+                if (it != null) {
+
+                    Log.e("TAG", "this is iyt : $it")
+
+                }
+
+            })
+    }
+    private fun observerShow() {
+
+        viewModel.getShowLiveData()
+            .observe(this@DownloadedSurveyOuestionActivity, Observer {
+
+                //showToast("succes")
+
+                if (it != null) {
+
+                    full_name =   it.userExamCheck?.fullName.toString()
+                    gender =  it.userExamCheck?.gender.toString()
+                    age =  it.userExamCheck?.age.toString()
+                    phone =  it.userExamCheck?.phone.toString()
+                    address = it.userExamCheck?.address.toString()
+
+                /*    Log.e("TAG", "observerShow55: ${it.userExamCheck?.fullName.toString()}")
+                    Log.e("TAG", "observerShow55: ${it.userExamCheck?.gender.toString()}")
+                    Log.e("TAG", "observerShow55: ${it.userExamCheck?.address.toString()}")
+                    Log.e("TAG", "observerShow55: ${it.userExamCheck?.phone.toString()}")
+                    Log.e("TAG", "observerShow55: ${it.userExamCheck?.age.toString()}")
+*/
+                    Log.e("TAG", "this is iit : $it")
+
+                }
+
+            })
+    }
+
 
 }

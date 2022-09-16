@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.survey.ResponseItem
 import com.example.surveyapp.activity.SurveyQuestionsActivity
@@ -38,9 +39,10 @@ class RecyclerAdapterSurveyList(var mList: ArrayList<ResponseItem>, val context 
         //val surveyId = holder.binding.model.surveyId.toString()
         holder.binding.downloadImg.setOnClickListener {
 
-            dbhelper.addSurvey(mList[position].surveyId.toString(),mList[position].name.toString(),"this will show after uploaded")
+          //  dbhelper.addSurvey(mList[position].surveyId.toString(),mList[position].name.toString(),"this will show after uploaded")
 
-
+            val name = mList[position].name
+            Toast.makeText(context, "$name Survey Downloaded ", Toast.LENGTH_SHORT).show()
         }
         holder.binding.nametext.setOnClickListener {
 
@@ -49,6 +51,7 @@ class RecyclerAdapterSurveyList(var mList: ArrayList<ResponseItem>, val context 
             intent = Intent(context, SurveyQuestionsActivity::class.java)
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             intent.putExtra("surveyId",mList[position].surveyId.toString())
+            intent.putExtra("surveyName",mList[position].name.toString())
            // Toast.makeText(context, "$surveyId", Toast.LENGTH_SHORT).show()
             context.startActivity(intent)
           //  intent = Intent(context, SurveyQuestionsActivity::class.java)

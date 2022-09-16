@@ -1,6 +1,7 @@
 package com.example.surveyapp
 
 import com.google.gson.annotations.SerializedName
+import java.text.FieldPosition
 
 data class QuestionWithOptionResponse2(
 
@@ -34,5 +35,6 @@ data class QuestionWithOptionResponse2(
 	   @field:SerializedName("optionID")
 	val optionID: String? = null,
 
-	   var answers: String? = null
+	   var answers: String? = null,
+	   var position: Int? = null
 )

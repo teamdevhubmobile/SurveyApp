@@ -3,15 +3,18 @@ package com.example.surveyapp.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.surveyapp.activity.DownloadedSurveyOuestionActivity
 import com.example.surveyapp.databinding.DownloadedListBinding
 import com.example.data.response.DownloadedSurveyListModel
+import com.example.surveyapp.activity.OnCLick
 import com.example.surveyapp.utils.Dbhelper
 
-class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<DownloadedSurveyListModel>, val context : Context
+class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<DownloadedSurveyListModel>, val context : Context, val OnItemCLick: OnCLick
 ) : RecyclerView.Adapter<DownloadedSurveyListRecyclerAdapter.ViewHolder>() {
 
     lateinit var intent: Intent
@@ -33,13 +36,48 @@ class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<DownloadedSurveyL
 
     @SuppressLint("Range")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
         holder.binding.model = mList[position]
 
 
+        Log.e("TAG91", "onBindViewHolder: ${mList[position].uploaded.toString()}", )
+        Log.e("TAG91", "onBindViewHolder: ${mList[position].submit.toString()}", )
+
+
+        if (mList[position].submit == false){
+
+            holder.binding.uploadbtn.setBackgroundColor(Color.RED)
+            holder.binding.uploadbtn.setText("Pending")
+
+        }else if (mList[position].submit == true){
+
+            holder.binding.uploadbtn.setBackgroundColor(Color.BLUE)
+            holder.binding.uploadbtn.setText("Upload")
+
+        }else {
+
+            holder.binding.uploadbtn.setBackgroundColor(Color.GREEN)
+            holder.binding.uploadbtn.setText("Uploaded")
+        }
+
+
+        holder.binding.uploadbtn.setOnClickListener {
+
+            if (holder.binding.uploadbtn.text.equals("Upload")) {
+                OnItemCLick.onClick(mList[position].id.toInt(), mList[position].Sno.toInt())
+            }
+          //  viewModel.getAnswerUploadPost( s1,"1",answermap,full_name,gender,phone,age,address)
+
+        }
+
         holder.binding.txt.setOnClickListener {
 
-            val intent = Intent(context, DownloadedSurveyOuestionActivity::class.java)
-            context.startActivity(intent)
+            if (holder.binding.uploadbtn.text.equals("Pending")) {
+                val intent = Intent(context, DownloadedSurveyOuestionActivity::class.java)
+                intent.putExtra("spid", mList[position].Sno)
+                intent.putExtra("sid", mList[position].id)
+                context.startActivity(intent)
+            }
 
         }
 

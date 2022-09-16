@@ -28,7 +28,7 @@ class ViewPagerAdapter(private val mContext: Context, private val itemList: Arra
         idtextview.text = itemList[position].questionBankID+". ".toString()
        // Toast.makeText(mContext, "$textview", Toast.LENGTH_SHORT).show()
 
-        itemList[position].option
+
 
 
             recycler.adapter =

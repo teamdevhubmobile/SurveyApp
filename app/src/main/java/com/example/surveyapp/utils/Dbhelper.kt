@@ -22,14 +22,20 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
                 + ID + " INTEGER PRIMARY KEY, " +
                 SURVEYID + " INTEGER," +
                 SURVEYNAME + " VARCHAR," +
-                UPLOADID + " INTEGER" + ")")
+                UPLOADID + " INTEGER," +
+                UPLOADED + " BOOLEAN," +
+                SUBMIT + " BOOLEAN" +")")
 
         // we are calling sqlite
         // method for executing our query
         db?.execSQL(query)
         val query2 = ("CREATE TABLE " + TABLE_NAME2 + " ("
                 + ID + " INTEGER PRIMARY KEY, " +
+                SURVEYID + " INTEGER," +
+                SPID + " INTEGER," +
                 QUESTIONID + " INTEGER," +
+                OPID + " INTEGER," +
+                OPPOSITION + " INTEGER," +
                 QUESTION + " VARCHAR," +
                 OPTION + " VARCHAR," +
                 ANSWER + " VARCHAR," +
@@ -47,8 +53,9 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
         onCreate(db)
     }
 
+    var servayPId :Long = 0
     // This method is for adding data in our database
-    fun addSurvey(surveyId : String, surveyName : String, uploadId : String){
+    fun addSurvey(surveyId : String, surveyName : String, uploadId : String,uploaded: Boolean,submit: Boolean){
         // below we are creating
         // a content values variable
         val cv = ContentValues()
@@ -59,19 +66,23 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
         cv.put(SURVEYID, surveyId)
         cv.put(SURVEYNAME, surveyName)
         cv.put(UPLOADID, uploadId)
+        cv.put(UPLOADED, uploaded)
+        cv.put(SUBMIT, submit)
+
+
 
 
         val db = this.writableDatabase
 
         // all values are inserted into database
-        db.insert(TABLE_NAME, null, cv)
+       servayPId =  db.insert(TABLE_NAME, null, cv)
 
         // at last we are
         // closing our database
         db.close()
     }
 
-    fun addQuestion(questionId : String,surveyId : String, optionId : ArrayList<OptionItem> ){
+    fun addQuestion(questionId : String,surveyId : String, optionId : ArrayList<OptionItem>,spID : Int,sID : Int ){
 
         val inputArray = ArrayList<String>()
         val gson = Gson()
@@ -88,8 +99,11 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
         try {
                 cv.put(OPTION,inputString)
 
+            cv.put(SURVEYID,sID)
+            cv.put(SPID,spID)
             cv.put(QUESTIONID,questionId)
             cv.put(QUESTION,surveyId)
+
 
         } catch (e: Exception) {
             Log.e("Problem", "$e ")
@@ -137,7 +151,7 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
 
     }
 
-    fun getQuestion(): Cursor? {
+    fun getQuestion(spid :Int): Cursor? {
 
         // here we are creating a readable
         // variable of our database
@@ -146,13 +160,11 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
 
         // below code returns a cursor to
         // read data from the database
-        return db.rawQuery("SELECT * FROM " + TABLE_NAME2, null)
+        return db.rawQuery("SELECT * FROM " + TABLE_NAME2 +" WHERE " + "SpId" + " = "+spid,null)
 
     }
 
-
-    @SuppressLint("Range")
-    fun answerSubmit(qId : String, answer : String){
+   /* fun spID(surveyID : String, primaryID : String){
 
         this.answer = answer
 
@@ -160,14 +172,14 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
 
             val cv = ContentValues()
             cv.put(ANSWER,answer)
-           // cv.put(ID,qId)
+            // cv.put(ID,qId)
 
             val db = this.readableDatabase
 
             val updateString="UPDATE "+ TABLE_NAME2 + " SET "+ ANSWER + " = '"+answer+"'   WHERE " + "questionID" + " = "+qId
             Log.e("TAG888", "answerSubmit: $updateString", )
             db.execSQL(updateString);
-           // db.rawQuery("INSERT "+ TABLE_NAME2 + " SET "+ ANSWER + " = '"+answer+"'   WHERE " + "questionID" + " = "+qId, null);
+            // db.rawQuery("INSERT "+ TABLE_NAME2 + " SET "+ ANSWER + " = '"+answer+"'   WHERE " + "questionID" + " = "+qId, null);
 
 
             val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME2 WHERE questionID = $qId ", null)
@@ -183,6 +195,55 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
 
             cursor.close()
 
+            // var whereArgs = arrayOf(qId)
+            // db.execSQL("UPDATE ${TABLE_NAME2} SET answer=$answer WHERE questionID=${qId.toInt()}")
+            //   db.update(TABLE_NAME2,cv,"questionID", whereArgs)
+        }catch (e:Exception){
+            Log.e("TAG16161", "answerSubmit: ${e.message}")
+        }
+
+    }*/
+
+    @SuppressLint("Range")
+    fun answerSubmit(qId : String, answer : String, spid: Int,opId:String,opPosition:String){
+
+        this.answer = answer
+
+        try {
+
+            val cv = ContentValues()
+            cv.put(ANSWER,answer)
+           // cv.put(ID,qId)
+
+            val db = this.readableDatabase
+
+            val updateString="UPDATE "+ TABLE_NAME2 + " SET "+ ANSWER + " = '"+answer+"'   WHERE " + "questionID" + " = "+qId +" AND "+ "SpId" + " = "+ spid
+            Log.e("TAG888", "answerSubmit: $updateString", )
+            db.execSQL(updateString);
+
+            val opIdSubmit="UPDATE "+ TABLE_NAME2 + " SET "+ OPID + " = '"+opId+"'   WHERE " + "questionID" + " = "+qId +" AND "+ "SpId" + " = "+ spid
+            Log.e("TAG888", "answerSubmit: $updateString", )
+            db.execSQL(opIdSubmit);
+
+            val opPositionSubmit="UPDATE "+ TABLE_NAME2 + " SET "+ OPPOSITION + " = '"+opPosition+"'   WHERE " + "questionID" + " = "+qId +" AND "+ "SpId" + " = "+ spid
+            Log.e("TAG888", "answerSubmit: $updateString", )
+            db.execSQL(opPositionSubmit);
+           // db.rawQuery("INSERT "+ TABLE_NAME2 + " SET "+ ANSWER + " = '"+answer+"'   WHERE " + "questionID" + " = "+qId, null);
+
+
+           /* val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME2 WHERE questionID = $qId ", null)
+
+            if (cursor.moveToFirst()) {
+                val columnNames = cursor.columnNames
+
+                for (i in columnNames) {
+                    // Assume every column is int
+                    Log.e("TAG102", "answerSubmit: "+ cursor.getString( cursor.getColumnIndex("answer") ) )
+                }
+            }
+
+            cursor.close()*/
+
            // var whereArgs = arrayOf(qId)
             // db.execSQL("UPDATE ${TABLE_NAME2} SET answer=$answer WHERE questionID=${qId.toInt()}")
          //   db.update(TABLE_NAME2,cv,"questionID", whereArgs)
@@ -190,6 +251,80 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
             Log.e("TAG16161", "answerSubmit: ${e.message}")
         }
 
+    }
+
+    fun uploadSurvey(surveyId : Int, uploaded: Int){
+
+        try {
+
+            val cv = ContentValues()
+            //cv.put(ANSWER,answer)
+            // cv.put(ID,qId)
+
+            val db = this.readableDatabase
+
+            val updateString="UPDATE "+ TABLE_NAME + " SET "+ UPLOADED + " = '"+uploaded+"'   WHERE " + "id" + " = "+surveyId
+            Log.e("TAG8008", "answerSubmit: $updateString", )
+            db.execSQL(updateString);
+            // db.rawQuery("INSERT "+ TABLE_NAME2 + " SET "+ ANSWER + " = '"+answer+"'   WHERE " + "questionID" + " = "+qId, null);
+
+/*
+            val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME2 WHERE questionID = $qId ", null)
+
+            if (cursor.moveToFirst()) {
+                val columnNames = cursor.columnNames
+
+                for (i in columnNames) {
+                    // Assume every column is int
+                    Log.e("TAG102", "answerSubmit: "+ cursor.getString( cursor.getColumnIndex("answer") ) )
+                }
+            }*/
+
+           // cursor.close()
+
+            // var whereArgs = arrayOf(qId)
+            // db.execSQL("UPDATE ${TABLE_NAME2} SET answer=$answer WHERE questionID=${qId.toInt()}")
+            //   db.update(TABLE_NAME2,cv,"questionID", whereArgs)
+        }catch (e:Exception){
+            Log.e("TAG16161", "answerSubmit: ${e.message}")
+        }
+    }
+
+    fun submitSurvey(surveyId : Int, submited: Int){
+
+        try {
+
+            val cv = ContentValues()
+            //cv.put(ANSWER,answer)
+            // cv.put(ID,qId)
+
+            val db = this.readableDatabase
+
+            val updateString="UPDATE "+ TABLE_NAME + " SET "+ SUBMIT + " = '"+submited+"'   WHERE " + "id" + " = "+surveyId
+            Log.e("TAG8008", "answerSubmit: $updateString", )
+            db.execSQL(updateString);
+            // db.rawQuery("INSERT "+ TABLE_NAME2 + " SET "+ ANSWER + " = '"+answer+"'   WHERE " + "questionID" + " = "+qId, null);
+
+/*
+            val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME2 WHERE questionID = $qId ", null)
+
+            if (cursor.moveToFirst()) {
+                val columnNames = cursor.columnNames
+
+                for (i in columnNames) {
+                    // Assume every column is int
+                    Log.e("TAG102", "answerSubmit: "+ cursor.getString( cursor.getColumnIndex("answer") ) )
+                }
+            }*/
+
+            // cursor.close()
+
+            // var whereArgs = arrayOf(qId)
+            // db.execSQL("UPDATE ${TABLE_NAME2} SET answer=$answer WHERE questionID=${qId.toInt()}")
+            //   db.update(TABLE_NAME2,cv,"questionID", whereArgs)
+        }catch (e:Exception){
+            Log.e("TAG16161", "answerSubmit: ${e.message}")
+        }
     }
 
     companion object{
@@ -214,6 +349,8 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
         val SURVEYID = "surveyID"
         val QUESTIONID = "questionID"
         val QUESTION = "question"
+        val OPID = "opId"
+        val OPPOSITION = "opPosition"
             val OPTION = "option"
         val OPTIONID = "optionID"
         val ANSWER = "answer"
@@ -223,6 +360,9 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
         // below is the variable for age column
         val SURVEYNAME  = "SurveyName"
         val UPLOADID = "UploadId"
+        val UPLOADED = "Uploaded"
+        val SUBMIT = "Submit"
+        val SPID = "SpId"
     }
 
 }

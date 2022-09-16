@@ -8,6 +8,7 @@ import com.example.survey.RegisterResponse
 import com.example.surveyapp.apiservice.ApiInterface
 import com.example.data.response.ForgetPasswordResponse
 import com.example.data.response.ShowResponse
+import com.example.data.response.ShowResponse2
 import com.example.data.response.UpdateQuestionAnswerResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -25,8 +26,8 @@ class HomeViewModel : ViewModel() {
   private var forgetpasswordLiveData = MutableLiveData<ForgetPasswordResponse>()
   //private var questionsLiveData = MutableLiveData<QuestionsResponse>()
   private var questionsLiveData = MutableLiveData<QuestionWithOptionResponse2>()
-  private var answerUploadLiveData = MutableLiveData<UpdateQuestionAnswerResponse>()
-  private var showLiveData = MutableLiveData<ShowResponse>()
+  private var answerUploadLiveData = MutableLiveData<Any>()
+  private var showLiveData = MutableLiveData<ShowResponse2>()
 
 
 
@@ -165,7 +166,7 @@ class HomeViewModel : ViewModel() {
       .subscribe ({result ->
 
         answerUploadLiveData.value = result
-        Log.e("TAG", "ans : "+ result.options )
+     //   Log.e("TAG", "ans : "+ result.options )
 
       /*  if(result..equals("ok") ){
 
@@ -231,7 +232,7 @@ class HomeViewModel : ViewModel() {
       .subscribe ({result ->
 
         showLiveData.value = result
-        Log.e("TAG", "showdata : "+ result.onlineExam?.name.toString() )
+        Log.e("TAG", "showdata : "+ result )
 
      /*   if(result..equals("ok")){
 
@@ -250,7 +251,7 @@ class HomeViewModel : ViewModel() {
       }, { error ->
         loaderLiveData.value = false
         //    Toast.makeText(MainApplication.applicationInstance.baseContext,error.message, Toast.LENGTH_LONG).show()
-        Log.e("TAG", "showdata : "+ error.message )
+        Log.e("TAG", "showdata : "+ error.message +error.printStackTrace() )
       })
   }
 
@@ -259,7 +260,7 @@ class HomeViewModel : ViewModel() {
   fun getSurveyLiveData() = surveyLiveData
   fun getForgetPasswordLivedata() = forgetpasswordLiveData
   fun getQuestionsLiveData() = questionsLiveData
-  fun getAnswerUploadLiveData() = questionsLiveData
+  fun getAnswerUploadLiveData() = answerUploadLiveData
   fun getShowLiveData() = showLiveData
 
 

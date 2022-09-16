@@ -6,6 +6,7 @@ import com.example.data.response.ForgetPasswordResponse
 import com.example.surveyapp.LoginResponse
 import com.example.surveyapp.QuestionWithOptionResponse2
 import com.example.data.response.ShowResponse
+import com.example.data.response.ShowResponse2
 import com.example.data.response.UpdateQuestionAnswerResponse
 import io.reactivex.Single
 import retrofit2.http.*
@@ -42,7 +43,7 @@ interface ApiInterface {
                                  @Field("phone") phone: String,
                                  @Field("age") age: String,
                                  @Field("address") address: String
-    ): Single<UpdateQuestionAnswerResponse>
+    ): Single<Any>
 
     @GET("survey/api/surveyer/updateQuestionAnswer")
         fun getAnswersUpload(@Query("loginuserID") loginuserID: String,
@@ -67,7 +68,7 @@ interface ApiInterface {
 
     @GET("survey/api/surveyer/show")
     fun getShow(@Query("loginuserID") loginuserID: String,
-                 @Query("onlineExamID") onlineExamID: String): Single<ShowResponse>
+                 @Query("onlineExamID") onlineExamID: String): Single<ShowResponse2>
 
 
 }

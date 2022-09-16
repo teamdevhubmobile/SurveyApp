@@ -51,6 +51,7 @@ class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Con
             selectedPosition = holder.adapterPosition
 
             mList[position].answers = mList[position].name
+            mList[position].position = position
 
             listener.onOptionClick(mList[position],qId)
            // Toast.makeText(context, "${holder.binding.checkbox.text.toString()}", Toast.LENGTH_SHORT).show()
