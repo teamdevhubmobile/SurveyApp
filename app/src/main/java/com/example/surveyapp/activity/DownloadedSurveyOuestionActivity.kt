@@ -1,29 +1,40 @@
 package com.example.surveyapp.activity
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.media.MediaPlayer
+import android.media.MediaRecorder
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.os.Environment
 import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
+import com.example.data.base.BaseActivity
+import com.example.data.response.AudioModel
+import com.example.data.response.SubmitAnswersModel
 import com.example.surveyapp.*
+import com.example.surveyapp.adapter.ViewPagerAdapter
 import com.example.surveyapp.databinding.DownloadedSurveyQuestionActivityBinding
 import com.example.surveyapp.interfaces.OptionsListenerInterface
 import com.example.surveyapp.utils.Dbhelper
-import com.example.surveyapp.adapter.ViewPagerAdapter
-import com.example.data.response.SubmitAnswersModel
+import com.example.surveyapp.utils.Dbhelper2
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.json.JSONArray
+import java.io.IOException
 import java.lang.reflect.Type
 
 
-class DownloadedSurveyOuestionActivity : AppCompatActivity(),OptionsListenerInterface {
+class DownloadedSurveyOuestionActivity : BaseActivity(),OptionsListenerInterface {
 
     lateinit var binding: DownloadedSurveyQuestionActivityBinding
    // private lateinit var viewPager: ViewPager
@@ -46,8 +57,29 @@ class DownloadedSurveyOuestionActivity : AppCompatActivity(),OptionsListenerInte
     var phone = ""
     var surveId = ""
     var surveyName = ""
+    var btnpoint = 0
 
 
+    var countDownTimer: CountDownTimer? = null
+    var second = -1
+    var minute:Int = 0
+
+
+    var mRecorder: MediaRecorder? = null
+    var mPlayer: MediaPlayer? = null
+    var mFileName: String? = null
+    val REQUEST_AUDIO_PERMISSION_CODE = 1
+
+    var number = 0
+    var pagenumber = 0
+    var audiofilename = ""
+
+    var customername = ""
+    var customergender = ""
+    var customerage = ""
+    var customeraddress = ""
+    var customermobile = ""
+    //val dbhelper2 = Dbhelper2(this,null)
 
 
     @SuppressLint("Range")
@@ -56,14 +88,65 @@ class DownloadedSurveyOuestionActivity : AppCompatActivity(),OptionsListenerInte
         binding = DataBindingUtil.setContentView(this, R.layout.activity_downloaded_survey_ouestion)
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
+        setObservers()
+
         val db = Dbhelper(this, null)
 
         val sid = intent.getStringExtra("sid")
         val spid = intent.getStringExtra("spid")
 
+       customername =  intent.getStringExtra("name").toString()
+       customerage =  intent.getStringExtra("age").toString()
+       customergender =  intent.getStringExtra("gender").toString()
+       customermobile =  intent.getStringExtra("mobile").toString()
+       customeraddress =  intent.getStringExtra("address").toString()
+        surveyName =  intent.getStringExtra("surveyName").toString()
+
         val cursor = db.getQuestion(spid!!.toInt())
 
+
+
+        startRecording()
+
+      /*  binding.recordBtn.setOnClickListener {
+
+            if (btnpoint != 0){
+
+                btnpoint--
+                binding.recordBtn.setImageDrawable(getDrawable(R.drawable.mic_microphone_icon))
+                second = -1
+                minute = 0
+                stopTimer()
+                binding.timerText.text="00:00"
+                mRecorder!!.stop()
+
+                //playAudio()
+
+            }else{
+
+                binding.recordBtn.setImageDrawable(getDrawable(R.drawable.square_icon))
+                startRecording()
+                btnpoint++
+
+            }
+
+
+        }*/
+
+  /*      binding.submitFab.setOnClickListener {
+
+            var file: File = File(""+mFileName)
+            var audio: MultipartBody.Part = getBodyFromAudioFile(file,"image")!!
+
+            viewModel.getMukulAudio(audio)
+
+        }*/
+
         binding.submitBtn.setOnClickListener {
+
+            db.addUploadSurveyTable(customername,sid.toString(),surveyName,mFileName.toString(),false)
+
+            autoStop()
 
             var newSList = mViewPagerAdapter.getList()
 
@@ -90,11 +173,18 @@ class DownloadedSurveyOuestionActivity : AppCompatActivity(),OptionsListenerInte
                     }
                     db.answerSubmit(item.questionBankID.toString(), answer,spid.toInt(),opId,opPosition)
 
+                    db.addTakenSurveyTable(customername,customergender,customerage,customeraddress,customermobile,sid.toString(),surveyName,item.questionBankID.toString(),opId,answer)
+
                 }
 
                 db.submitSurvey(spid.toInt(),1)
 
-                val intent = Intent(this,DownloadedSurveyActivity::class.java)
+               // val intent = Intent(this,DownloadedSurveyActivity::class.java)
+                val intent = Intent(this,TakenSurveyActivity::class.java)
+                audiofilename = mFileName.toString()
+                mPrefs.prefAudioFileDetails = AudioModel(mFileName.toString())
+                intent.putExtra("audiofile",audiofilename)
+                intent.putExtra("surveyName",surveyName)
                 startActivity(intent)
                 finish()
 
@@ -118,6 +208,7 @@ class DownloadedSurveyOuestionActivity : AppCompatActivity(),OptionsListenerInte
                 Toast.makeText(this, "Select Answer", Toast.LENGTH_SHORT).show()
 
             }*/
+
         }
 
 
@@ -131,7 +222,7 @@ class DownloadedSurveyOuestionActivity : AppCompatActivity(),OptionsListenerInte
         OId =  cursor.getString(cursor.getColumnIndex(Dbhelper.OPTION))
         val answers =  cursor.getString(cursor.getColumnIndex(Dbhelper.ANSWER))
 
-        Log.e("TAG 122112", "onCreate: ${answers.toString()}", )
+        Log.e("TAG 122112", "onCreate: ${answers.toString()}")
 //            val OptionId =  cursor.getString(cursor.getColumnIndex(Dbhelper.OPTIONID))
 //            val OptionName =  cursor.getString(cursor.getColumnIndex(Dbhelper.QUESTIONID))
 
@@ -163,7 +254,7 @@ class DownloadedSurveyOuestionActivity : AppCompatActivity(),OptionsListenerInte
 
         }
 
-        mList.add(ResponseItem(id,question,optionList))
+        mList.add(ResponseItem(id,question,"2",optionList))
         Log.e("TAG111", "DataBase: QuestionId = "+id.toString()+"   Question = "+question.toString()+"   Option = "+OId )
         Log.e("TAG611", "DataBase: list = "+mList )
 
@@ -176,7 +267,7 @@ class DownloadedSurveyOuestionActivity : AppCompatActivity(),OptionsListenerInte
              OId =  cursor.getString(cursor.getColumnIndex(Dbhelper.OPTION))
             val answers =  cursor.getString(cursor.getColumnIndex(Dbhelper.ANSWER))
 
-            Log.e("TAG 122112", "onCreate: ${answers.toString()}", )
+            Log.e("TAG 122112", "onCreate: ${answers.toString()}")
 //            val OptionId =  cursor.getString(cursor.getColumnIndex(Dbhelper.OPTIONID))
 //            val OptionName =  cursor.getString(cursor.getColumnIndex(Dbhelper.QUESTIONID))
 
@@ -210,7 +301,7 @@ class DownloadedSurveyOuestionActivity : AppCompatActivity(),OptionsListenerInte
 
             
 
-            mList.add(ResponseItem(id,question,optionList))
+            mList.add(ResponseItem(id,question,"2",optionList))
             Log.e("TAG111", "DataBase: QuestionId = "+id.toString()+"   Question = "+question.toString()+"   Option = "+OId )
             Log.e("TAG611", "DataBase: list = "+mList )
 
@@ -242,6 +333,9 @@ class DownloadedSurveyOuestionActivity : AppCompatActivity(),OptionsListenerInte
 
             override fun onPageSelected(position: Int) {
                 // your logic here
+
+                pagenumber = position
+
             }
         }
 
@@ -258,9 +352,15 @@ class DownloadedSurveyOuestionActivity : AppCompatActivity(),OptionsListenerInte
             binding.viewPager.adapter = mViewPagerAdapter
             binding.viewPager.addOnPageChangeListener(viewPagerPageChangeListener)
 
+            binding.nextBtn.setOnClickListener {
+
+                binding.viewPager.setCurrentItem(pagenumber+1, true)
+
+            }
+
         }catch (e:Exception){
 
-            Log.e("TAG555", "viewPager: $e", )
+            Log.e("TAG555", "viewPager: $e")
         }
     }
 
@@ -299,7 +399,7 @@ class DownloadedSurveyOuestionActivity : AppCompatActivity(),OptionsListenerInte
             }
         }catch (e:Exception){
 
-            Log.e("TAG44", "onOptionClick: $e", )
+            Log.e("TAG44", "onOptionClick: $e")
 
         }
 
@@ -312,6 +412,7 @@ class DownloadedSurveyOuestionActivity : AppCompatActivity(),OptionsListenerInte
     private fun setObservers() {
         observerShow()
         observeUpdateQandA()
+        observerAudioSubmit()
     }
 
 
@@ -358,5 +459,180 @@ class DownloadedSurveyOuestionActivity : AppCompatActivity(),OptionsListenerInte
             })
     }
 
+    private fun observerAudioSubmit() {
+
+        viewModel.getAudioUploadLiveData()
+            .observe(this, Observer {
+
+                if (it != null) {
+
+
+                    //Toast.makeText(this, "Finally audio uploaded", Toast.LENGTH_SHORT).show()
+                    /*  Log.e("TAG", "observerShow55: ${it.userExamCheck?.fullName.toString()}")
+                      Log.e("TAG", "observerShow55: ${it.userExamCheck?.gender.toString()}")
+                      Log.e("TAG", "observerShow55: ${it.userExamCheck?.address.toString()}")
+                      Log.e("TAG", "observerShow55: ${it.userExamCheck?.phone.toString()}")
+                      Log.e("TAG", "observerShow55: ${it.userExamCheck?.age.toString()}")
+
+                      Log.e("TAG", "this is iit : $it")
+  */
+                }
+
+            })
+    }
+
+
+
+
+    private fun startRecording() {
+
+        if (CheckPermissions()) {
+
+            mFileName = application.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)!!.getAbsolutePath()
+
+            audiofilename = mFileName.toString()
+            mPrefs.prefAudioFileDetails = AudioModel(mFileName.toString())
+
+
+            if (number == 1) {
+                mFileName += "/Recording1.mp3"
+            }else if (number == 2){
+                mFileName += "/Recording2.mp3"
+            }else{
+                mFileName += "/Recording3.mp3"
+            }
+
+           /* if (number == 1) {
+                mFileName += "/Recording1.3gp"
+            }else if (number == 2){
+                mFileName += "/Recording2.3gp"
+            }else{
+                mFileName += "/Recording3.3gp"
+            }*/
+
+            mRecorder = MediaRecorder()
+
+            mRecorder!!.setAudioSource(MediaRecorder.AudioSource.MIC)
+
+            mRecorder!!.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+
+            mRecorder!!.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+
+            mRecorder!!.setOutputFile(mFileName)
+            try {
+                mRecorder!!.prepare()
+            } catch (e: IOException) {
+                Log.e("TAG", "prepare() failed"+e.message+e.printStackTrace())
+            }
+            // start method will start
+            // the audio recording.
+            mRecorder!!.start()
+
+            showTimer()
+            Toast.makeText(applicationContext,"Recording Started", Toast.LENGTH_SHORT).show()
+        } else {
+            RequestPermissions()
+        }
+    }
+
+    fun showTimer() {
+        countDownTimer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                second++
+                binding.timerText.setText(recorderTime())
+            }
+
+            override fun onFinish() {}
+        }
+        (countDownTimer as CountDownTimer).start()
+    }
+
+    fun stopTimer(){
+        (countDownTimer as CountDownTimer).cancel()
+    }
+
+    fun recorderTime(): String? {
+        if (second == 60) {
+            minute++
+            second = 0
+        }
+        return java.lang.String.format("%02d:%02d", minute, second)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            REQUEST_AUDIO_PERMISSION_CODE -> if (grantResults.size > 0) {
+                val permissionToRecord = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                val permissionToStore = grantResults[1] == PackageManager.PERMISSION_GRANTED
+                if (permissionToRecord && permissionToStore) {
+                    Toast.makeText(applicationContext, "Permission Granted", Toast.LENGTH_LONG).show()
+                    startRecording()
+                } else {
+                    Toast.makeText(applicationContext, "Permission Denied", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+    fun playAudio() {
+
+        // for playing our recorded audio
+        // we are using media player class.
+        mPlayer = MediaPlayer()
+
+
+
+        try {
+            // below method is used to set the
+            // data source which will be our file name
+            mPlayer!!.setDataSource(mFileName)
+
+            // below method will prepare our media player
+            mPlayer!!.prepare()
+
+            // below method will start our media player.
+            mPlayer!!.start()
+
+
+            mPrefs.prefAudioFileDetails = AudioModel(mFileName.toString())
+           // statusTV.setText("Recording Started Playing")
+        } catch (e: IOException) {
+            Log.e("TAG", "prepare() failed")
+        }
+    }
+
+
+    fun CheckPermissions(): Boolean {
+        val result = ContextCompat.checkSelfPermission(applicationContext,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        val result1 = ContextCompat.checkSelfPermission(applicationContext,
+            Manifest.permission.RECORD_AUDIO
+        )
+        return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun RequestPermissions() {
+        ActivityCompat.requestPermissions(this, arrayOf(
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ), REQUEST_AUDIO_PERMISSION_CODE)
+    }
+
+    fun autoStop(){
+
+        btnpoint--
+        // binding.recordBtn.setImageDrawable(getDrawable(R.drawable.mic_microphone_icon))
+        second = -1
+        minute = 0
+        stopTimer()
+        // binding.timerText.text="00:00"
+        mRecorder!!.stop()
+        //showImage()
+        // playAudio()
+
+
+    }
 
 }

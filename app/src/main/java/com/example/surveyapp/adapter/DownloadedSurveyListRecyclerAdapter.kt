@@ -1,27 +1,49 @@
 package com.example.surveyapp.adapter
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.surveyapp.activity.DownloadedSurveyOuestionActivity
 import com.example.surveyapp.databinding.DownloadedListBinding
 import com.example.data.response.DownloadedSurveyListModel
+import com.example.data.response.TakenSurveyModel
+import com.example.surveyapp.activity.DownloadedCustomerDetailActivity
 import com.example.surveyapp.activity.OnCLick
+import com.example.surveyapp.apiservice.ApiInterface
+import com.example.surveyapp.interfaces.TakenSuveyClick
+import com.example.surveyapp.retrofitMain
 import com.example.surveyapp.utils.Dbhelper
+import io.reactivex.schedulers.Schedulers
+import okhttp3.internal.notify
+import okhttp3.internal.notifyAll
 
-class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<DownloadedSurveyListModel>, val context : Context, val OnItemCLick: OnCLick
+class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<TakenSurveyModel>, val context : AppCompatActivity, val OnItemCLick: OnCLick, var click: TakenSuveyClick
 ) : RecyclerView.Adapter<DownloadedSurveyListRecyclerAdapter.ViewHolder>() {
 
     lateinit var intent: Intent
     val dbhelper = Dbhelper(context, null)
+    lateinit var apiClient: ApiInterface
+    var mPosition = -1
+
 
     inner class ViewHolder(val binding: DownloadedListBinding) :
         RecyclerView.ViewHolder(binding.root) {}
+
+    fun updatePosition(position: Int,list:ArrayList<TakenSurveyModel>){
+
+        this.mList = list
+
+        this.notifyDataSetChanged()
+
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -31,6 +53,10 @@ class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<DownloadedSurveyL
         val binding =
             DownloadedListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
+        apiClient = retrofitMain.create<ApiInterface>(ApiInterface::class.java)
+
+
+
         return ViewHolder(binding)
     }
 
@@ -39,11 +65,12 @@ class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<DownloadedSurveyL
 
         holder.binding.model = mList[position]
 
+      //  Log.e("TAG656", "onBindViewHolder: ${ mList[position].uploaded}", )
 
-        Log.e("TAG91", "onBindViewHolder: ${mList[position].uploaded.toString()}", )
-        Log.e("TAG91", "onBindViewHolder: ${mList[position].submit.toString()}", )
+//        Log.e("TAG91", "onBindViewHolder: ${mList[position].uploaded.toString()}", )
+//        Log.e("TAG91", "onBindViewHolder: ${mList[position].submit.toString()}", )
 
-
+/*
         if (mList[position].submit == false){
 
             holder.binding.uploadbtn.setBackgroundColor(Color.RED)
@@ -51,35 +78,72 @@ class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<DownloadedSurveyL
 
         }else if (mList[position].submit == true){
 
-            holder.binding.uploadbtn.setBackgroundColor(Color.BLUE)
-            holder.binding.uploadbtn.setText("Upload")
+            if(mList[position].uploaded == true) {
 
-        }else {
+                holder.binding.uploadbtn.setBackgroundColor(Color.GREEN)
+                holder.binding.uploadbtn.setText("Uploaded")
+            }else{
+                holder.binding.uploadbtn.setBackgroundColor(Color.BLUE)
+                holder.binding.uploadbtn.setText("Upload")
+            }
+
+
+        }else if(mList[position].uploaded == true){
+
+            holder.binding.uploadbtn.setBackgroundColor(Color.GREEN)
+            holder.binding.uploadbtn.setText("Uploaded")
+        }*/
+
+
+        holder.binding.txt.setText(mList[position].username.toString())
+
+        holder.binding.uploadbtn.setOnClickListener {
+
+            click.onBtnClick(true)
+
+            if (holder.binding.uploadbtn.text.equals("Upload")) {
+                OnItemCLick.onClick(mList[position].id.toInt(), mList[position].Sno.toInt(),position)
+            }
+
+          /*  apiClient.getAnswersUploadPost()
+                .subscribeOn(Schedulers.io())
+                .subscribe ({ result ->
+                    Log.e("getLocationUpdate", "success : "+ result )
+
+                }, { error ->
+                    Log.e("getLocationUpdate", "error : "+ error.message )
+                })*/
+
+           /* if(mList[position].uploaded == true){
+
+                holder.binding.uploadbtn.setBackgroundColor(Color.GREEN)
+                holder.binding.uploadbtn.setText("Uploaded")
+            }*/
+
+          //  viewModel.getAnswerUploadPost( s1,"1",answermap,full_name,gender,phone,age,address)
+
+        }
+
+       /* holder.binding.txt.setOnClickListener {
+
+            if (holder.binding.uploadbtn.text.equals("Pending")) {
+               // val intent = Intent(context, DownloadedSurveyOuestionActivity::class.java)
+                val intent = Intent(context, DownloadedCustomerDetailActivity::class.java)
+                intent.putExtra("spid", mList[position].Sno)
+                intent.putExtra("sid", mList[position].id)
+                context.startActivity(intent)
+                context.finish()
+            }
+
+        }*/
+
+        if (mPosition == position ){
+
 
             holder.binding.uploadbtn.setBackgroundColor(Color.GREEN)
             holder.binding.uploadbtn.setText("Uploaded")
         }
 
-
-        holder.binding.uploadbtn.setOnClickListener {
-
-            if (holder.binding.uploadbtn.text.equals("Upload")) {
-                OnItemCLick.onClick(mList[position].id.toInt(), mList[position].Sno.toInt())
-            }
-          //  viewModel.getAnswerUploadPost( s1,"1",answermap,full_name,gender,phone,age,address)
-
-        }
-
-        holder.binding.txt.setOnClickListener {
-
-            if (holder.binding.uploadbtn.text.equals("Pending")) {
-                val intent = Intent(context, DownloadedSurveyOuestionActivity::class.java)
-                intent.putExtra("spid", mList[position].Sno)
-                intent.putExtra("sid", mList[position].id)
-                context.startActivity(intent)
-            }
-
-        }
 
 /*
         val cursor = dbhelper.getName()
@@ -116,6 +180,7 @@ class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<DownloadedSurveyL
             context.startActivity(intent)
         }
 */
+
     }
 
     override fun getItemCount(): Int {

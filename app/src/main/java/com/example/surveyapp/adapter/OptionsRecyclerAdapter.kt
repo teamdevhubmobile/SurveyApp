@@ -60,6 +60,7 @@ class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Con
 
         }
 
+
         if (selectedPosition==position){
             holder.binding.checkbox.setChecked(true)
 

@@ -3,8 +3,9 @@ package com.example.surveyapp.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.example.surveyapp.fragment.DownloadedSurvey
+import com.example.surveyapp.fragment.UploadedSurveyListFragment
 import com.example.surveyapp.R
+import com.example.surveyapp.fragment.DashBoardFragment
 import com.example.surveyapp.fragment.Profile
 import com.example.surveyapp.fragment.SurveyListFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -20,21 +21,21 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
 
         val firstFragment= SurveyListFragment()
-        val secondFragment= DownloadedSurvey()
+        val secondFragment= UploadedSurveyListFragment()
         val thirdFragment= Profile()
-        val fourth= Profile()
+        val dashoardfragment= DashBoardFragment()
         val fifth= Profile()
 
 
-        setCurrentFragment(firstFragment)
+        setCurrentFragment(dashoardfragment)
 
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.profile ->setCurrentFragment(thirdFragment)
                 R.id.sruvey_list ->setCurrentFragment(firstFragment)
-                R.id.survey_history ->setCurrentFragment(secondFragment)
-                R.id.manager_details ->setCurrentFragment(fourth)
-                R.id.target ->setCurrentFragment(fifth)
+                R.id.target ->setCurrentFragment(secondFragment)
+                R.id.dashboard ->setCurrentFragment(dashoardfragment)
+
 
             }
             true

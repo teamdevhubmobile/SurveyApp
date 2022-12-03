@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.surveyapp.HomeViewModel
 import com.example.surveyapp.R
 import com.example.surveyapp.databinding.LoginActivityBinding
+import com.example.surveyapp.mPrefs
 
 class LoginActivity : AppCompatActivity() {
 
@@ -83,6 +84,9 @@ class LoginActivity : AppCompatActivity() {
             //showToast("succes")
 
             if (it != null) {
+
+                mPrefs.prefUserDetails = it
+
                 loginuserID = it.userdata?.loginuserID.toString()
                 val editor = sharedPreferences!!.edit()
 

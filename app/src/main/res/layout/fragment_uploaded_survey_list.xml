@@ -1,0 +1,21 @@
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data class="DownloadedSurveyBinding">
+
+    </data>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.UploadedSurveyListFragment">
+
+   <androidx.recyclerview.widget.RecyclerView
+       android:id="@+id/upload_survey_list_recycler"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       tools:listitem="@layout/item_survey_uploaded_list"
+       app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+</LinearLayout>
+</layout>

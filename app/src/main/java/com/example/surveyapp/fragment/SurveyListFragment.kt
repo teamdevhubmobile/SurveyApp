@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.survey.ResponseItem
@@ -16,6 +15,7 @@ import com.example.surveyapp.HomeViewModel
 import com.example.surveyapp.OptionItem
 import com.example.surveyapp.adapter.RecyclerAdapterSurveyList
 import com.example.surveyapp.activity.DownloadedSurveyActivity
+import com.example.surveyapp.activity.TakenSurveyActivity
 import com.example.surveyapp.databinding.SurveyListBinding
 import com.example.surveyapp.interfaces.OptionsListenerInterface
 
@@ -44,9 +44,12 @@ class SurveyListFragment : Fragment(),OptionsListenerInterface {
 
         }
 
+        binding.takenSurvey.setOnClickListener {
 
+            val  intent = Intent(context, TakenSurveyActivity::class.java)
+            startActivity(intent)
 
-
+        }
 
 
         return (binding.root)

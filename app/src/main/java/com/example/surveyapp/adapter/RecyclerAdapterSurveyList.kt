@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.survey.ResponseItem
+import com.example.surveyapp.activity.CustomerDetailActivity
 import com.example.surveyapp.activity.SurveyQuestionsActivity
 import com.example.surveyapp.databinding.MySurveylistBinding
 import com.example.surveyapp.interfaces.OptionsListenerInterface
@@ -49,6 +50,7 @@ class RecyclerAdapterSurveyList(var mList: ArrayList<ResponseItem>, val context 
             surveyIdListener.onSurveyId(mList[position].surveyId.toString())
 
             intent = Intent(context, SurveyQuestionsActivity::class.java)
+            //intent = Intent(context, CustomerDetailActivity::class.java)
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             intent.putExtra("surveyId",mList[position].surveyId.toString())
             intent.putExtra("surveyName",mList[position].name.toString())

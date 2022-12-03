@@ -23,6 +23,9 @@ data class QuestionWithOptionResponse2(
 	@field:SerializedName("question")
 	val question: String? = null,
 
+	@field:SerializedName("typeNumber")
+	val typeNumber: String? = null,
+
 	@field:SerializedName("option")
 	val option: List<OptionItem?>? = null
 )

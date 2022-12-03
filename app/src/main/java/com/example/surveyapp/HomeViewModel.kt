@@ -4,14 +4,14 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.data.requests.UploadAnswerRequest
+import com.example.data.response.*
 import com.example.survey.RegisterResponse
 import com.example.surveyapp.apiservice.ApiInterface
-import com.example.data.response.ForgetPasswordResponse
-import com.example.data.response.ShowResponse
-import com.example.data.response.ShowResponse2
-import com.example.data.response.UpdateQuestionAnswerResponse
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.http.Multipart
 
 class HomeViewModel : ViewModel() {
 
@@ -26,8 +26,12 @@ class HomeViewModel : ViewModel() {
   private var forgetpasswordLiveData = MutableLiveData<ForgetPasswordResponse>()
   //private var questionsLiveData = MutableLiveData<QuestionsResponse>()
   private var questionsLiveData = MutableLiveData<QuestionWithOptionResponse2>()
-  private var answerUploadLiveData = MutableLiveData<Any>()
+  private var answerUploadLiveData = MutableLiveData<Boolean>()
+ // private var answerUploadLiveData = MutableLiveData<UpdateAnswerAppResponse>()
   private var showLiveData = MutableLiveData<ShowResponse2>()
+  private var uploadedSurveyListLiveData = MutableLiveData<UploadedSurveyListResponse>()
+  private var uploadedSurveyQuestionListLiveData = MutableLiveData<UploadedSurveyQuestionResponse>()
+  private var audioUploadLiveData = MutableLiveData<Any>()
 
 
 
@@ -60,7 +64,7 @@ class HomeViewModel : ViewModel() {
       }, { error ->
         loaderLiveData.value = false
         //    Toast.makeText(MainApplication.applicationInstance.baseContext,error.message, Toast.LENGTH_LONG).show()
-        Log.e("TAG", "login : "+ error.message )
+        Log.e("TAG23", "login : "+ error.message )
       })
   }
 
@@ -122,7 +126,7 @@ class HomeViewModel : ViewModel() {
       }, { error ->
         loaderLiveData.value = false
         //    Toast.makeText(MainApplication.applicationInstance.baseContext,error.message, Toast.LENGTH_LONG).show()
-        Log.e("TAG", "login : "+ error.message )
+        Log.e("TAG12", "login : "+ error.message )
       })
   }
 
@@ -156,39 +160,40 @@ class HomeViewModel : ViewModel() {
       })
   }
 
-  fun getAnswerUploadPost(loginuserID:String, onlineExamID:String,  map: Map<String,String>, full_name:String, gender:String, phone:String, age:String, address:String){
+  fun getAnswerUploadPost(loginuserID: RequestBody, onlineExamID:RequestBody, map: Map<String,String>, full_name:RequestBody, gender:RequestBody, phone:RequestBody, age:RequestBody, address:RequestBody, files:MultipartBody.Part){
     loaderLiveData.value = true
     dataLoadError.value = ""
 
-    apiClient.getAnswersUploadPost(loginuserID, onlineExamID, map, full_name, gender, phone, age, address)
+    apiClient.getAnswersUploadPost(loginuserID, onlineExamID, map, full_name, gender, phone, age, address,files)
       .observeOn(AndroidSchedulers.mainThread())
       .subscribeOn(Schedulers.io())
       .subscribe ({result ->
 
-        answerUploadLiveData.value = result
+        answerUploadLiveData.value = result.status!!
      //   Log.e("TAG", "ans : "+ result.options )
 
-      /*  if(result..equals("ok") ){
+     /*   if(result.status == true){
 
           answerUploadLiveData.value = result
           loaderLiveData.value = false
 
-          Log.e("TAG", "login : "+ result.response )
+          Log.e("TAG", "login : "+ result.message )
         }else{
-          dataLoadError.value = result.response.toString()
+          dataLoadError.value = result.message.toString()
           loaderLiveData.value = false
-          Log.e("TAG", "login : "+ result.response )
+          Log.e("TAG", "login : "+ result.message )
 
           // Toast.makeText(MainApplication.applicationInstance.baseContext,result.message, Toast.LENGTH_LONG).show()
-        }
-*/
+        }*/
+
       }, { error ->
         loaderLiveData.value = false
         //    Toast.makeText(MainApplication.applicationInstance.baseContext,error.message, Toast.LENGTH_LONG).show()
-        Log.e("TAG", "ans : "+ error.message )
+        Log.e("TAG32122", "ans : "+ error.message )
       })
   }
 
+/*
   fun getAnswerUploadBody(request: UploadAnswerRequest,answer: HashMap<String,String>,){
     loaderLiveData.value = true
     dataLoadError.value = ""
@@ -201,7 +206,8 @@ class HomeViewModel : ViewModel() {
         answerUploadLiveData.value = result
         Log.e("TAG", "ans : "+ result.options )
 
-      /*  if(result..equals("ok") ){
+      */
+/*  if(result..equals("ok") ){
 
           answerUploadLiveData.value = result
           loaderLiveData.value = false
@@ -214,13 +220,15 @@ class HomeViewModel : ViewModel() {
 
           // Toast.makeText(MainApplication.applicationInstance.baseContext,result.message, Toast.LENGTH_LONG).show()
         }
-*/
+*//*
+
       }, { error ->
         loaderLiveData.value = false
         //    Toast.makeText(MainApplication.applicationInstance.baseContext,error.message, Toast.LENGTH_LONG).show()
         Log.e("TAG", "ans : "+ error.message )
       })
   }
+*/
 
   fun getShow(loginuserID:String,onlineExamID:String){
     loaderLiveData.value = true
@@ -255,6 +263,105 @@ class HomeViewModel : ViewModel() {
       })
   }
 
+ fun getUploadedSurveyList(loginuserID:String){
+    loaderLiveData.value = true
+    dataLoadError.value = ""
+
+    apiClient.getUploadedSurveyList(loginuserID)
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribeOn(Schedulers.io())
+      .subscribe ({result ->
+
+        uploadedSurveyListLiveData.value = result
+        Log.e("TAG", "showdata : "+ result )
+
+     /*   if(result..equals("ok")){
+
+          showLiveData.value = result
+          loaderLiveData.value = false
+
+          Log.e("TAG", "surveyQuestions : "+ result.response )
+        }else{
+          //dataLoadError.value = result..toString()
+          loaderLiveData.value = false
+          Log.e("TAG", "surveyQuestions didn't get : "+ result.response )
+
+          // Toast.makeText(MainApplication.applicationInstance.baseContext,result.message, Toast.LENGTH_LONG).show()
+        }*/
+
+      }, { error ->
+        loaderLiveData.value = false
+        //    Toast.makeText(MainApplication.applicationInstance.baseContext,error.message, Toast.LENGTH_LONG).show()
+        Log.e("TAG", "showdata : "+ error.message +error.printStackTrace() )
+      })
+  }
+
+ fun getUploadedSurveyQuestion(surveyId:String){
+    loaderLiveData.value = true
+    dataLoadError.value = ""
+
+    apiClient.getUploadedSurveyQuestion(surveyId)
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribeOn(Schedulers.io())
+      .subscribe ({result ->
+
+        uploadedSurveyQuestionListLiveData.value = result
+        Log.e("TAG", "showdata : "+ result )
+
+     /*   if(result..equals("ok")){
+
+          showLiveData.value = result
+          loaderLiveData.value = false
+
+          Log.e("TAG", "surveyQuestions : "+ result.response )
+        }else{
+          //dataLoadError.value = result..toString()
+          loaderLiveData.value = false
+          Log.e("TAG", "surveyQuestions didn't get : "+ result.response )
+
+          // Toast.makeText(MainApplication.applicationInstance.baseContext,result.message, Toast.LENGTH_LONG).show()
+        }*/
+
+      }, { error ->
+        loaderLiveData.value = false
+        //    Toast.makeText(MainApplication.applicationInstance.baseContext,error.message, Toast.LENGTH_LONG).show()
+        Log.e("TAG", "showdata : "+ error.message +error.printStackTrace() )
+      })
+  }
+
+  fun getMukulAudio(audio: MultipartBody.Part){
+    loaderLiveData.value = true
+    dataLoadError.value = ""
+
+    apiClient.getMukulAudio(audio)
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribeOn(Schedulers.io())
+      .subscribe ({result ->
+
+        audioUploadLiveData.value = result
+        Log.e("TAG", "showdata : "+ result )
+
+     /*   if(result..equals("ok")){
+
+          showLiveData.value = result
+          loaderLiveData.value = false
+
+          Log.e("TAG", "surveyQuestions : "+ result.response )
+        }else{
+          //dataLoadError.value = result..toString()
+          loaderLiveData.value = false
+          Log.e("TAG", "surveyQuestions didn't get : "+ result.response )
+
+          // Toast.makeText(MainApplication.applicationInstance.baseContext,result.message, Toast.LENGTH_LONG).show()
+        }*/
+
+      }, { error ->
+        loaderLiveData.value = false
+        //    Toast.makeText(MainApplication.applicationInstance.baseContext,error.message, Toast.LENGTH_LONG).show()
+        Log.e("TAG", "showdata : "+ error.message +error.printStackTrace() )
+      })
+  }
+
 
   fun getLoginLiveData() = loginLiveData
   fun getSurveyLiveData() = surveyLiveData
@@ -262,6 +369,9 @@ class HomeViewModel : ViewModel() {
   fun getQuestionsLiveData() = questionsLiveData
   fun getAnswerUploadLiveData() = answerUploadLiveData
   fun getShowLiveData() = showLiveData
+  fun getUploadedSurveyListLiveData() = uploadedSurveyListLiveData
+  fun getUploadedSurveyQuestionListLiveData() = uploadedSurveyQuestionListLiveData
+  fun getAudioUploadLiveData() = audioUploadLiveData
 
 
 }

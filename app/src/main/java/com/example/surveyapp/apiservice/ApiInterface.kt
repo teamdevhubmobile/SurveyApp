@@ -1,14 +1,13 @@
 package com.example.surveyapp.apiservice
 
 import com.example.data.requests.UploadAnswerRequest
+import com.example.data.response.*
 import com.example.survey.RegisterResponse
-import com.example.data.response.ForgetPasswordResponse
 import com.example.surveyapp.LoginResponse
 import com.example.surveyapp.QuestionWithOptionResponse2
-import com.example.data.response.ShowResponse
-import com.example.data.response.ShowResponse2
-import com.example.data.response.UpdateQuestionAnswerResponse
 import io.reactivex.Single
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.*
 
 interface ApiInterface {
@@ -31,19 +30,22 @@ interface ApiInterface {
 @GET("survey/api/surveyer/getQuestionWithOption")
     fun getQuestions(@Query("surveyId") surveyId: String): Single<QuestionWithOptionResponse2>
 
-    @FormUrlEncoded
-    @POST("survey/api/surveyer/updateQuestionAnswer")
-        fun getAnswersUploadPost(@Field("loginuserID") loginuserID: String,
-                                 @Field("onlineExamID") onlineExamID: String,
+    @Multipart
+    @POST("survey/api/surveyer/updateQuestionAnswerApp")
+        fun getAnswersUploadPost(@Part("loginuserID") loginuserID: RequestBody,
+                                 @Part("onlineExamID") onlineExamID: RequestBody,
                             // @Query("answer") answer: List<HashMap<String,String>>,
-                                 @FieldMap map: Map<String,String>,
+                                 @PartMap map: Map<String,String>,
 
-                                 @Field("full_name") full_name: String,
-                                 @Field("gender") gender: String,
-                                 @Field("phone") phone: String,
-                                 @Field("age") age: String,
-                                 @Field("address") address: String
-    ): Single<Any>
+                                 @Part("full_name") full_name: RequestBody,
+                                 @Part("gender") gender: RequestBody,
+                                 @Part("phone") phone: RequestBody,
+                                 @Part("age") age: RequestBody,
+                                 @Part("address") address: RequestBody,
+                                // @Part("files") files:RequestBody,
+                                 @Part files: MultipartBody.Part
+
+    ): Single<UpdateAnswerAppResponse>
 
     @GET("survey/api/surveyer/updateQuestionAnswer")
         fun getAnswersUpload(@Query("loginuserID") loginuserID: String,
@@ -67,8 +69,27 @@ interface ApiInterface {
 
 
     @GET("survey/api/surveyer/show")
-    fun getShow(@Query("loginuserID") loginuserID: String,
-                 @Query("onlineExamID") onlineExamID: String): Single<ShowResponse2>
+    fun getShow(
+        @Query("loginuserID") loginuserID: String,
+        @Query("onlineExamID") onlineExamID: String
+    ): Single<ShowResponse2>
+
+  @GET("survey/api/surveyer/getSurveyListSurveyer")
+    fun getUploadedSurveyList(
+        @Query("loginuserID") loginuserID: String
+    ): Single<UploadedSurveyListResponse>
+
+ @GET("survey/api/surveyer/getSurveyListDetail")
+    fun getUploadedSurveyQuestion(
+        @Query("surveyId") loginuserID: String
+    ): Single<UploadedSurveyQuestionResponse>
+
+
+    @Multipart
+    @POST("apiPublic/testMukul")
+    fun getMukulAudio(
+        @Part audio: MultipartBody.Part
+    ): Single<Any>
 
 
 }

@@ -20,11 +20,27 @@
     tools:context=".activity.SurveyQuestionsActivity"
     android:orientation="vertical">
 
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewPager"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_350sdp" />
+
+        <Button
+            android:id="@+id/next_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_margin="@dimen/_10sdp"
+            android:text="next" />
+
+
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/submit_btn"
@@ -44,51 +60,29 @@
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/_15sdp"/>
 
+   <!-- <TextView
+        android:id="@+id/timer_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00"
+        android:textStyle="bold"
+        android:layout_above="@+id/record_btn"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/_21sdp"
+        android:layout_marginBottom="@dimen/_115sdp"
+        />
 
-    <!--  <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:orientation="vertical"
-          android:layout_above ="@+id/submit_btn">
-
-          <androidx.recyclerview.widget.RecyclerView
-          android:id="@+id/questions_recyclerview"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-          tools:listitem="@layout/item_questions_layout" />
-
-      </LinearLayout>
-
-      <Button
-          android:id="@+id/submit_btn"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_alignParentBottom="true"
-          android:text="submit" />
-
-
-      <LinearLayout
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:orientation="vertical"
-          android:layout_above="@+id/submit_btn"
-          android:layout_alignParentRight="true"
-          android:layout_margin="@dimen/_15sdp">
-
-          <com.google.android.material.floatingactionbutton.FloatingActionButton
-              android:id="@+id/downloadQuestionfab"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:src="@drawable/download_img" />
-
-      </LinearLayout>-->
-<!--
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewPagerMain"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_200sdp"
-        android:background="@color/black"/>-->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/record_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/_15sdp"
+        android:layout_marginRight="@dimen/_15sdp"
+        android:layout_marginBottom="@dimen/_70sdp"
+        android:src="@drawable/mic_microphone_icon" />-->
 
 
 </RelativeLayout>

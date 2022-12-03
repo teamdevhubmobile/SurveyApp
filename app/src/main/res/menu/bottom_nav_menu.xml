@@ -2,14 +2,31 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/dashboard"
+        android:icon="@drawable/dashboardicon"
+        android:title="DashBoard" />
+
+    <item
         android:id="@+id/sruvey_list"
         android:icon="@drawable/ic_baseline_list_24"
         android:title="Survey List" />
 
-    <item
+   <!-- <item
         android:id="@+id/survey_history"
         android:icon="@drawable/ic_baseline_history_toggle_off_24"
-        android:title="Survey History" />
+        android:title="Survey History" />-->
+
+
+   <!-- <item
+        android:id="@+id/manager_details"
+        android:icon="@drawable/ic_baseline_manage_accounts_24"
+        android:title="Manager Details" />-->
+
+    <item
+        android:id="@+id/target"
+        android:icon="@drawable/ic_baseline_announcement_24"
+        android:title="Uploaded" />
+
 
     <item
         android:id="@+id/profile"
@@ -17,14 +34,6 @@
         android:title="Profile" />
 
 
-    <item
-        android:id="@+id/manager_details"
-        android:icon="@drawable/ic_baseline_manage_accounts_24"
-        android:title="Manager Details" />
 
-    <item
-        android:id="@+id/target"
-        android:icon="@drawable/ic_baseline_announcement_24"
-        android:title="Target" />
 
 </menu>

@@ -3,6 +3,7 @@ package com.example.surveyapp
 import android.content.Context
 import android.content.res.Configuration
 import android.support.multidex.MultiDexApplication
+import com.example.surveyapp.utils.AppPrefs
 import com.example.surveyapp.utils.Constants
 //import androidx.multidex.MultiDexApplication
 import okhttp3.Interceptor
@@ -18,10 +19,15 @@ val retrofitMain : Retrofit by lazy {
     MainApplication.retrofitMain
 }
 
+val mPrefs: AppPrefs by lazy {
+    MainApplication.mPrefs!!
+}
+
 class MainApplication()  : MultiDexApplication() {
 
 
     companion object{
+        var mPrefs: AppPrefs? = null
         lateinit var retrofitMain:Retrofit
         lateinit var applicationInstance: MainApplication
     }
@@ -35,6 +41,7 @@ class MainApplication()  : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        mPrefs = AppPrefs(this)
         applicationInstance = this
         initRetrofit()
     }

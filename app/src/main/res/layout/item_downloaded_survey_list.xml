@@ -6,7 +6,7 @@
 
         <variable
             name="model"
-            type="com.example.data.response.DownloadedSurveyListModel" />
+            type="com.example.data.response.TakenSurveyModel" />
 
     </data>
 
@@ -29,28 +29,42 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight=".7"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@{model.id+' '+model.name+' '+model.Sno}"
+                    android:textSize="@dimen/_15sdp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_margin="@dimen/_5sdp"/>
+
+                <TextView
+                    android:id="@+id/username_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{model.username}"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"/>
 
 
+            </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/txt"
-            android:layout_width="0dp"
-            android:layout_weight=".7"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-
-            android:text="@{model.Sno+' '+model.name+' '+model.id}"
-            android:textSize="@dimen/_15sdp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_margin="@dimen/_5sdp"/>
 
         <Button
             android:id="@+id/uploadbtn"
             android:layout_width="0dp"
             android:layout_weight=".3"
             android:text="Pending"
+            android:textSize="@dimen/_9sdp"
             android:layout_gravity="center"
             android:backgroundTint="#ff0000"
 

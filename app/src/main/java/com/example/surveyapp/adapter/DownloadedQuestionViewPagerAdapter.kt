@@ -12,7 +12,7 @@ import com.example.surveyapp.utils.Dbhelper2
 
 class DownloadedQuestionViewPagerAdapter(private val mContext: Context, private val itemList: ArrayList<String> ) : PagerAdapter() {
     private var layoutInflater: LayoutInflater? = null
-    val dbhelper  = Dbhelper2(mContext,null)
+
 
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {

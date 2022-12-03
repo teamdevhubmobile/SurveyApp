@@ -5,32 +5,27 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 class Dbhelper2 (context: Context, nothing: Nothing?): SQLiteOpenHelper(context, DATABASE_NAME2 ,null,1) {
 
 
     override fun onCreate(db: SQLiteDatabase?) {
-       /* val query = ("CREATE TABLE " + TABLE_NAME + " ("
-                + ID + " INTEGER PRIMARY KEY, " +
-                SURVEYID + " INTEGER," +
-                SURVEYNAME + " VARCHAR," +
-                UPLOADID + " INTEGER" + ")")
-
-        // we are calling sqlite
-        // method for executing our query
-        db?.execSQL(query)*/
-        val query2 = ("CREATE TABLE " + TABLE_NAME2 + " ("
-                + ID + " INTEGER PRIMARY KEY, " +
+           val query3 = ("CREATE TABLE " + TABLE_NAME + " ("
+                 + ID + " INTEGER PRIMARY KEY, " +
+                 FULLNAME + " VARCHAR," +
+                 GENDER + " VARCHAR," +
+                 AGE + " VARCHAR," +
+                 ADDRESS + " VARCHAR," +
+                   PHONE + " VARCHAR," +")")
+            /*     SURVEYID + " INTEGER," +
                 QUESTIONID + " INTEGER," +
-                QUESTION + " VARCHAR," +
-                OPTION + " VARCHAR," +
-                ANSWER + " VARCHAR," +
-                STATUS + " VARCHAR," +
-                ATTEMPT + " BOOLEAN" + ")")
+                OPID + " INTEGER," +
+                ANSWER + " VARCHAR," + ")")*/
 
         // we are calling sqlite
         // method for executing our query
-        db?.execSQL(query2)
+        db?.execSQL(query3)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, p1: Int, p2: Int) {
@@ -39,24 +34,30 @@ class Dbhelper2 (context: Context, nothing: Nothing?): SQLiteOpenHelper(context,
         onCreate(db)
     }
 
-    fun addQuestion(questionId : String,question : String, option : String){
+    fun addTakenSurvey(fullName : String,gender : String, phone : String, age : String, address : String){
 
         val cv = ContentValues()
 
-        cv.put(QUESTIONID,questionId)
-        cv.put(QUESTION,question)
-        cv.put(OPTION, option)
+
+        cv.put(QUESTIONID,fullName)
+        cv.put(QUESTION,gender)
+        cv.put(QUESTION,age)
+        cv.put(OPTION, address)
+        cv.put(OPTION, phone)
+
         //cv.put(ANSWER, answer)
 
         val db = this.writableDatabase
 
         db.insert(TABLE_NAME2, null, cv)
 
+        Log.e("TAG1", "addTakenSurvey: $cv", )
+
         db.close()
     }
 
 
-    fun getQuestion(): Cursor? {
+    fun getTakenSurvey(): Cursor? {
 
         val db = this.readableDatabase
         return db.rawQuery("SELECT * FROM " + TABLE_NAME2, null)
@@ -71,7 +72,7 @@ class Dbhelper2 (context: Context, nothing: Nothing?): SQLiteOpenHelper(context,
         private val DATABASE_VERSION = 1
 
         // below is the variable for table name
-        val TABLE_NAME = "SurveyTable"
+        val TABLE_NAME =  "UploadTable"
         val TABLE_NAME2 = "QuestionTable"
 
         // below is the variable for id column
@@ -88,6 +89,13 @@ class Dbhelper2 (context: Context, nothing: Nothing?): SQLiteOpenHelper(context,
 
         val SURVEYNAME  = "SurveyName"
         val UPLOADID = "UploadId"
+
+        val OPID = "opId"
+        val FULLNAME  = "fullName"
+        val GENDER = "gender"
+        val PHONE = "phone"
+        val AGE = "age"
+        val ADDRESS = "address"
     }
 
 }

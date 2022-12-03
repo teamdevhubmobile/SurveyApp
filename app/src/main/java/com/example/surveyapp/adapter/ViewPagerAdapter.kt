@@ -5,7 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import com.example.surveyapp.*
@@ -24,33 +26,27 @@ class ViewPagerAdapter(private val mContext: Context, private val itemList: Arra
         val textview: TextView = view.findViewById(R.id.slide_screen_item_iv)
         val idtextview: TextView = view.findViewById(R.id.question_id)
         val recycler: RecyclerView = view.findViewById(R.id.inner_question_recyclerview)
-        textview.text = itemList[position].question.toString()
+        //textview.text = itemList[position].question.toString()
+        textview.setText(HtmlCompat.fromHtml( itemList[position].question.toString(), HtmlCompat.FROM_HTML_MODE_COMPACT))
         idtextview.text = itemList[position].questionBankID+". ".toString()
        // Toast.makeText(mContext, "$textview", Toast.LENGTH_SHORT).show()
 
 
+        if (itemList[position].typeNumber == "1"){
 
 
-            recycler.adapter =
-                OptionsRecyclerAdapter(itemList[position].option as ArrayList<OptionItem>, mContext,listener,itemList[position].questionBankID.toString())
+
+        }
+
+
+            recycler.adapter = OptionsRecyclerAdapter(itemList[position].option as ArrayList<OptionItem>, mContext,listener,itemList[position].questionBankID.toString())
 
         val answerlist= arrayListOf<String>()
 
-        for (item in itemList) {
-            answerlist.addAll(listOf(""+itemList[position].option as ArrayList<OptionItem>))
+        answerlist.addAll(listOf(""+itemList[position].option as ArrayList<OptionItem>))
 
-            Log.e("TAG978", "answerlist: ${ answerlist.toString()}")
+        container.addView(view as RelativeLayout)
 
-            try {
-
-
-                container.addView(view, position)
-
-            }catch (e:Exception){
-                Log.e("TAG234324", "instantiateItem: $e", )
-            }
-            //  dbhelper.answerSubmit(item.questionId, item.item.name.toString())
-        }
 
 /*
 
@@ -62,6 +58,12 @@ class ViewPagerAdapter(private val mContext: Context, private val itemList: Arra
                 )
 */
 
+     /*   try {
+            container.addView(view, position)
+
+        }catch (e:Exception){
+            Log.e("TAG8009", "instantiateItem: $e", )
+        }*/
 
             return view
 
@@ -77,11 +79,12 @@ class ViewPagerAdapter(private val mContext: Context, private val itemList: Arra
     }
 
     override fun isViewFromObject(view: View, obj: Any): Boolean {
-        return view === obj
+        return view === obj as RelativeLayout
     }
 
+
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-        val view = `object` as View
-        container.removeView(view)
+       // val view = `object` as View
+        container.removeView(`object` as RelativeLayout)
     }
 }
