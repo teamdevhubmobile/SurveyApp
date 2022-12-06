@@ -2,6 +2,7 @@ package com.example.surveyapp.activity
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.data.base.BaseActivity
+import com.example.data.response.AnswerSequenceModel
 import com.example.data.response.DownloadedSurveyListModel
 import com.example.data.response.TakenSurveyModel
 import com.example.surveyapp.HomeViewModel
@@ -36,6 +38,7 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
     var age = ""
     var address = ""
     var phone = ""
+    var audiofile = ""
     var surveId = ""
     var surveyName = ""
     lateinit var db: Dbhelper
@@ -43,9 +46,12 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
     var s1 = ""
     //val list = arrayListOf<DownloadedSurveyListModel>()
     val list = arrayListOf<TakenSurveyModel>()
+    val anslist = arrayListOf<AnswerSequenceModel>()
     var surveyIDcheck = ""
     var usernameCheck = ""
     var uploadbtnclick = false
+    val keyanswermap = hashMapOf<String, String>()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,11 +67,10 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
 
         surveyName = intent.getStringExtra("surveyName").toString()
 
-        getUserData()
-
 
         setObservers()
         getDBData()
+
     }
 
     var spId = 0
@@ -179,7 +184,7 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
 
 
         Log.e("TAG0012", "uploadSurvay: $audio", )
-        Log.e("TAG0013", "uploadSurvay: $answermap", )
+        Log.e("TAG0013", "uploadSurvay:  $answermap", )
 
         viewModel.getAnswerUploadPost( withBody(""+s1)!!,withBody("1")!!, answermap,withBody(full_name)!!,withBody(gender)!!,withBody(phone)!!,withBody(age)!!,withBody(address)!!,
             audio )
@@ -247,33 +252,6 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
             list.clear()
         }
 
-        try{
-            val db = Dbhelper(this, null)
-
-
-
-            val cursor = db.getTakenSurvey()
-
-            cursor!!.moveToFirst()
-
-             val Sno = cursor.getString(cursor.getColumnIndex(Dbhelper.ID))
-             val surveyIDcheck = cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYID))
-             val usernameCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.FULLNAME))
-
-
-
-            while (cursor.moveToNext()) {
-                val Sno = cursor.getString(cursor.getColumnIndex(Dbhelper.ID))
-                 val surveyIDcheck = cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYID))
-                 val usernameCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.FULLNAME))
-
-
-            }
-            cursor.close()
-
-        }catch (e:Exception){
-
-        }
 
         try{
             val db = Dbhelper(this, null)
@@ -289,6 +267,21 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
             val surveyName = cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYNAME))
             val surveyId = cursor.getInt(cursor.getColumnIndex(Dbhelper.SURVEYID))
             val uploaded = cursor.getInt(cursor.getColumnIndex(Dbhelper.UPLOADED))
+            val usernAgeCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.AGE))
+            val usernAddressCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.ADDRESS))
+            val usernGenderCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.GENDER))
+            val usernPhoneCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.PHONE))
+            val usernAudioCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.AUDIOFILE))
+
+
+            full_name = usernameCheck
+            gender = usernGenderCheck
+            age = usernAgeCheck
+            address = usernAddressCheck
+            phone = usernPhoneCheck
+            audiofile = usernAudioCheck
+
+
 
             var mylist = TakenSurveyModel(username.toString(),surveyId.toString(),surveyName.toString(),Sno.toString())
             list.add(mylist)
@@ -304,6 +297,20 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
                 val surveyName = cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYNAME))
                 val surveyId = cursor.getInt(cursor.getColumnIndex(Dbhelper.SURVEYID))
                 val uploaded = cursor.getInt(cursor.getColumnIndex(Dbhelper.UPLOADED))
+                val usernAgeCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.AGE))
+                val usernAddressCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.ADDRESS))
+                val usernGenderCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.GENDER))
+                val usernPhoneCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.PHONE))
+                val usernAudioCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.AUDIOFILE))
+
+
+                full_name = usernameCheck
+                gender = usernGenderCheck
+                age = usernAgeCheck
+                address = usernAddressCheck
+                phone = usernPhoneCheck
+                audiofile = usernAudioCheck
+
 
                 var mylist = TakenSurveyModel(username.toString(),surveyId.toString(),surveyName.toString(),Sno.toString())
                 list.add(mylist)
@@ -405,12 +412,15 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
         }*/
     }
 
-    override fun onBtnClick(click: Boolean) {
+    override fun onBtnClick(click: Boolean,sid: String) {
 
         if (click == true){
             uploadbtnclick = click
 
-            uploadSurvay(1,8)
+
+           // uploadSurvay(1,8)
+            //getUserGeneralData()
+            getUserData(sid.toString())
 
         }
 
@@ -418,7 +428,8 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
     }
 
     @SuppressLint("Range")
-    fun getUserData(){
+    fun getUserData(surid:String){
+
 
 
         try{
@@ -431,46 +442,114 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
             cursor!!.moveToFirst()
 
             val Sno = cursor.getString(cursor.getColumnIndex(Dbhelper.ID))
-           val surveyIDcheck = cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYID))
-            val usernameCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.FULLNAME))
-            val usernAgeCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.AGE))
-            val usernAddressCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.ADDRESS))
-            val usernGenderCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.GENDER))
-            val usernPhoneCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.PHONE))
+            val surveyIDcheck = cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYID))
+            val surveyPrimary = cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYPRIMARI))
+            val questionId = cursor.getString(cursor.getColumnIndex(Dbhelper.QUESTIONID))
+            val answer = cursor.getString(cursor.getColumnIndex(Dbhelper.ANSWER))
+            val optionId = cursor.getString(cursor.getColumnIndex(Dbhelper.OPID))
+            val optionPosition = cursor.getString(cursor.getColumnIndex(Dbhelper.OPCHECK))
 
-             full_name = usernameCheck
-             gender = usernGenderCheck
-             age = usernAgeCheck
-             address = usernAddressCheck
-             phone = usernPhoneCheck
+            Log.e("TAG001100331", "getUserData: ${surid == surveyPrimary}", )
 
 
+            if (surid == surveyPrimary){
+
+                Log.e("TAG001100221", "getUserData: ${surid == surveyPrimary}", )
+
+                keyanswer = "answer"+"["+surveyIDcheck+"]"+"["+questionId+"]"+"["+optionPosition+"]"
+                keyvalue = optionId
+
+                keyanswermap.put(keyanswer,keyvalue)
+            }
+
+
+
+//            Log.e("TAG*************************", "getDBData: $keyanswermap", )
 
             while (cursor.moveToNext()) {
                 val Sno = cursor.getString(cursor.getColumnIndex(Dbhelper.ID))
                 val surveyIDcheck = cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYID))
-                val usernameCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.FULLNAME))
-                val usernAgeCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.AGE))
-                val usernAddressCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.ADDRESS))
-                val usernGenderCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.GENDER))
-                val usernPhoneCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.PHONE))
+                val surveyPrimary = cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYPRIMARI))
+                val questionId = cursor.getString(cursor.getColumnIndex(Dbhelper.QUESTIONID))
+                val answer = cursor.getString(cursor.getColumnIndex(Dbhelper.ANSWER))
+                val optionId = cursor.getString(cursor.getColumnIndex(Dbhelper.OPID))
+                val optionPosition = cursor.getString(cursor.getColumnIndex(Dbhelper.OPCHECK))
 
-                full_name = usernameCheck
-                gender = usernGenderCheck
-                age = usernAgeCheck
-                address = usernAddressCheck
-                phone = usernPhoneCheck
+                Log.e("TAG001100331", "getUserData: ${surid == surveyPrimary}", )
 
+
+                if (surid == surveyPrimary){
+
+                    Log.e("TAG001100221", "getUserData: ${surid == surveyPrimary}", )
+
+
+                    keyanswer = "answer"+"["+surveyIDcheck+"]"+"["+questionId+"]"+"["+optionPosition+"]"
+                    keyvalue = optionId
+
+
+                    keyanswermap.put(keyanswer,keyvalue)
+
+
+
+                }
+
+
+//                Log.e("TAG1************************* 111", "getDBData: $keyanswermap", )
 
 
             }
+
+            var file: File = File(""+ audiofile.toString())
+            var audio: MultipartBody.Part = getBodyFromAudioFile(file,"files")!!
+
+
+            viewModel.getAnswerUploadPost( withBody("2")!!,withBody("1")!!, keyanswermap,withBody(full_name)!!,withBody(gender)!!,withBody(phone)!!,withBody(age)!!,withBody(address)!!, audio )
+
+
+
+
             cursor.close()
+
+
 
         }catch (e:Exception){
 
         }
 
 
+
+/*
+
+        for (i in 0 until downloadedRecyclerAdapter?.anslist!!.size) {
+
+            keyanswer = "answer"+"["+anslist[i].surveyid+"]"+"["+anslist[i].questionid+"]"+"["+anslist[i].optionPosition+"]"
+            keyvalue = anslist[i].optionid
+
+            keyanswermap.put(keyanswer,keyvalue)
+
+          //  Log.e("TAG1112212101", "getUserData: ****************************************************** \n$keyanswermap", )
+
+        }
+
+
+        Log.e("TAG1112212101", "getUserData: ****************************************************** \n$keyanswermap", )
+
+
+
+        var file: File = File(""+ audiofile.toString())
+        var audio: MultipartBody.Part = getBodyFromAudioFile(file,"files")!!
+
+
+        viewModel.getAnswerUploadPost( withBody("2")!!,withBody("1")!!, keyanswermap,withBody(full_name)!!,withBody(gender)!!,withBody(phone)!!,withBody(age)!!,withBody(address)!!, audio )
+
+
+
+*/
+
     }
+
+
+
+
 
 }

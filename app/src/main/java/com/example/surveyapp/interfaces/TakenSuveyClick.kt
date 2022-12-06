@@ -4,5 +4,5 @@ import com.example.surveyapp.OptionItem
 
 interface TakenSuveyClick {
 
-    fun onBtnClick(click : Boolean)
+    fun onBtnClick(click : Boolean,sid : String)
 }

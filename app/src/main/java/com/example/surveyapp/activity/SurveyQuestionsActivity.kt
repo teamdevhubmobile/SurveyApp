@@ -27,13 +27,14 @@ import com.example.data.response.SurvIdModel
 import com.example.surveyapp.*
 import com.example.surveyapp.adapter.ViewPagerAdapter
 import com.example.surveyapp.databinding.QuestionsActivityBinding
+import com.example.surveyapp.interfaces.OpCheckListener
 import com.example.surveyapp.interfaces.OptionsListenerInterface
 import com.example.surveyapp.utils.Dbhelper
 import okhttp3.MultipartBody
 import java.io.File
 import java.io.IOException
 
-class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface {
+class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface,OpCheckListener {
 
     lateinit var binding: QuestionsActivityBinding
     private lateinit var viewModel: HomeViewModel
@@ -166,7 +167,7 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface {
 
         binding.fabBtn.setOnClickListener {
 
-            dbhelper.addTakenSurveyTable("","","","","","","","","","")
+           // dbhelper.addTakenSurveyTable("","","","","","","")
 
             var surveyExits =   dbhelper.addSurvey(surveId.toString(),surveyName.toString(),"this will show after uploaded",false,false)
 
@@ -198,7 +199,7 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface {
 
                 }else {
 
-                    Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
+                 //   Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
                 }
             }else{
 
@@ -346,7 +347,7 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface {
 
                             // textListt =  it.response?.get() as ArrayList<OptionItem>
 
-                            mViewPagerAdapter = ViewPagerAdapter(this@SurveyQuestionsActivity,   it.response as ArrayList<ResponseItem>,this )
+                            mViewPagerAdapter = ViewPagerAdapter(this@SurveyQuestionsActivity,   it.response as ArrayList<ResponseItem>,this ,this)
                             binding.viewPager.pageMargin = 15
                             binding.viewPager.setPadding(50, 0, 50, 0);
                             binding.viewPager.setClipToPadding(false)
@@ -738,9 +739,16 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface {
 
             for (item in myList){
 
-                Toast.makeText(this, "$survId", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this, "$survId", Toast.LENGTH_SHORT).show()
                 Log.e("TAG987", "onCreate: $item")
             }
+
+    }
+
+    override fun opCheckListener(opPosition: Int) {
+
+        Log.e("TAG09013", "opCheckListener: $opPosition", )
+
 
     }
 

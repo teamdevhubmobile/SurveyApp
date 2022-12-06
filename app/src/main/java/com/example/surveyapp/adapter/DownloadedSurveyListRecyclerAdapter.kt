@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.data.response.AnswerSequenceModel
 import com.example.surveyapp.activity.DownloadedSurveyOuestionActivity
 import com.example.surveyapp.databinding.DownloadedListBinding
 import com.example.data.response.DownloadedSurveyListModel
@@ -22,8 +23,10 @@ import com.example.surveyapp.interfaces.TakenSuveyClick
 import com.example.surveyapp.retrofitMain
 import com.example.surveyapp.utils.Dbhelper
 import io.reactivex.schedulers.Schedulers
+import okhttp3.MultipartBody
 import okhttp3.internal.notify
 import okhttp3.internal.notifyAll
+import java.io.File
 
 class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<TakenSurveyModel>, val context : AppCompatActivity, val OnItemCLick: OnCLick, var click: TakenSuveyClick
 ) : RecyclerView.Adapter<DownloadedSurveyListRecyclerAdapter.ViewHolder>() {
@@ -32,6 +35,10 @@ class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<TakenSurveyModel>
     val dbhelper = Dbhelper(context, null)
     lateinit var apiClient: ApiInterface
     var mPosition = -1
+    val anslist = arrayListOf<AnswerSequenceModel>()
+
+    var newlist = arrayListOf<String>()
+
 
 
     inner class ViewHolder(val binding: DownloadedListBinding) :
@@ -99,7 +106,10 @@ class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<TakenSurveyModel>
 
         holder.binding.uploadbtn.setOnClickListener {
 
-            click.onBtnClick(true)
+           // getAnswerSequence(mList[position].id)
+            click.onBtnClick(true,mList[position].id)
+
+
 
             if (holder.binding.uploadbtn.text.equals("Upload")) {
                 OnItemCLick.onClick(mList[position].id.toInt(), mList[position].Sno.toInt(),position)
@@ -158,7 +168,7 @@ class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<TakenSurveyModel>
             //binding.txt.append(cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYNAME)) + "\n")
 
         }
-        cursor.close()*/
+        cursor.close()
 
 
 
@@ -166,12 +176,12 @@ class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<TakenSurveyModel>
         //holder.binding.txt.setText(""+id+" • "+name+"")
 
         // holder.binding.model = mList[position]
-      /*  holder.binding.downloadImg.setOnClickListener {
+        holder.binding.downloadImg.setOnClickListener {
 
 
 
-        }*/
-       /* holder.binding.nametext.setOnClickListener {
+        }
+        holder.binding.nametext.setOnClickListener {
 
 
             intent = Intent(context, SurveyQuestionsActivity::class.java)
@@ -185,6 +195,56 @@ class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<TakenSurveyModel>
 
     override fun getItemCount(): Int {
         return mList.size
+    }
+
+    @SuppressLint("Range")
+    fun getAnswerSequence(sid : String) {
+
+        try {
+            val db = Dbhelper(context, null)
+
+
+            val cursor = db.getTakenSurvey()
+
+            cursor!!.moveToFirst()
+
+            val Sno = cursor.getString(cursor.getColumnIndex(Dbhelper.ID))
+            val surveyIDcheck = cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYID))
+            val surveyPrimary = cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYPRIMARI))
+            val questionId = cursor.getString(cursor.getColumnIndex(Dbhelper.QUESTIONID))
+            val answer = cursor.getString(cursor.getColumnIndex(Dbhelper.ANSWER))
+            val optionId = cursor.getString(cursor.getColumnIndex(Dbhelper.OPID))
+            val optionPosition = cursor.getString(cursor.getColumnIndex(Dbhelper.OPCHECK))
+
+            val mylist = AnswerSequenceModel(surveyIDcheck, questionId, optionPosition, optionId)
+
+            anslist.add(mylist)
+
+            while (cursor.moveToNext()) {
+                val Sno = cursor.getString(cursor.getColumnIndex(Dbhelper.ID))
+                val surveyIDcheck = cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYID))
+                val surveyPrimary = cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYPRIMARI))
+                val questionId = cursor.getString(cursor.getColumnIndex(Dbhelper.QUESTIONID))
+                val answer = cursor.getString(cursor.getColumnIndex(Dbhelper.ANSWER))
+                val optionId = cursor.getString(cursor.getColumnIndex(Dbhelper.OPID))
+                val optionPosition = cursor.getString(cursor.getColumnIndex(Dbhelper.OPCHECK))
+
+                val mylist =
+                    AnswerSequenceModel(surveyIDcheck, questionId, optionPosition, optionId)
+
+                anslist.add(mylist)
+
+
+            }
+
+            cursor.close()
+            click.onBtnClick(true,sid)
+
+        } catch (e: Exception) {
+
+            Log.e("TAG11", "getAnswerSequence: ${e.message}", )
+
+        }
     }
 }
 

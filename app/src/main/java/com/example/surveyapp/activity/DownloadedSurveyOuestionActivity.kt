@@ -2,6 +2,8 @@ package com.example.surveyapp.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -24,6 +26,7 @@ import com.example.data.response.SubmitAnswersModel
 import com.example.surveyapp.*
 import com.example.surveyapp.adapter.ViewPagerAdapter
 import com.example.surveyapp.databinding.DownloadedSurveyQuestionActivityBinding
+import com.example.surveyapp.interfaces.OpCheckListener
 import com.example.surveyapp.interfaces.OptionsListenerInterface
 import com.example.surveyapp.utils.Dbhelper
 import com.example.surveyapp.utils.Dbhelper2
@@ -34,7 +37,7 @@ import java.io.IOException
 import java.lang.reflect.Type
 
 
-class DownloadedSurveyOuestionActivity : BaseActivity(),OptionsListenerInterface {
+class DownloadedSurveyOuestionActivity : BaseActivity(),OptionsListenerInterface,OpCheckListener {
 
     lateinit var binding: DownloadedSurveyQuestionActivityBinding
    // private lateinit var viewPager: ViewPager
@@ -58,6 +61,7 @@ class DownloadedSurveyOuestionActivity : BaseActivity(),OptionsListenerInterface
     var surveId = ""
     var surveyName = ""
     var btnpoint = 0
+    var opcheck = arrayListOf<Int>()
 
 
     var countDownTimer: CountDownTimer? = null
@@ -144,8 +148,10 @@ class DownloadedSurveyOuestionActivity : BaseActivity(),OptionsListenerInterface
 
         binding.submitBtn.setOnClickListener {
 
-            db.addUploadSurveyTable(customername,sid.toString(),surveyName,mFileName.toString(),false)
+            //db.addTakenSurveyTable("","","","","","")
+          val insertedid =  db.addUploadSurveyTable(customername,customergender,customerage,customeraddress,customermobile,sid.toString(),surveyName,mFileName.toString(),false)
 
+            //db.setPosition(sid.toString(),customername.toString())
             autoStop()
 
             var newSList = mViewPagerAdapter.getList()
@@ -173,7 +179,21 @@ class DownloadedSurveyOuestionActivity : BaseActivity(),OptionsListenerInterface
                     }
                     db.answerSubmit(item.questionBankID.toString(), answer,spid.toInt(),opId,opPosition)
 
-                    db.addTakenSurveyTable(customername,customergender,customerage,customeraddress,customermobile,sid.toString(),surveyName,item.questionBankID.toString(),opId,answer)
+                   /* for(i in 0 until opcheck.size){
+
+                        db.addTakenSurveyTable(customername,customergender,customerage,customeraddress,customermobile,sid.toString(),surveyName,item.questionBankID.toString(),opId,
+                            opcheck[i].toString(),answer)
+
+
+                    }*/
+
+
+
+                    db.addTakenSurveyTable(insertedid.toString(),sid.toString(),item.questionBankID.toString(),opId,
+                        opPosition,answer)
+
+
+
 
                 }
 
@@ -344,7 +364,7 @@ class DownloadedSurveyOuestionActivity : BaseActivity(),OptionsListenerInterface
         try {
 
 
-            mViewPagerAdapter = ViewPagerAdapter(this@DownloadedSurveyOuestionActivity, mList,this)
+            mViewPagerAdapter = ViewPagerAdapter(this@DownloadedSurveyOuestionActivity, mList,this,this)
             binding.viewPager.pageMargin = 15
             binding.viewPager.setPadding(50, 0, 50, 0);
             binding.viewPager.setClipToPadding(false)
@@ -632,6 +652,54 @@ class DownloadedSurveyOuestionActivity : BaseActivity(),OptionsListenerInterface
         //showImage()
         // playAudio()
 
+
+    }
+
+    override fun opCheckListener(opPosition: Int) {
+
+        Log.e("TAG0901", "opCheckListener: $opPosition", )
+        opcheck.add(opPosition)
+
+    }
+
+    override fun onBackPressed() {
+    //    super.onBackPressed()
+
+        val dialogClickListener =
+            DialogInterface.OnClickListener { dialog, which ->
+                when (which) {
+                    // on below line we are setting a click listener
+                    // for our positive button
+                  /*  DialogInterface.BUTTON_POSITIVE -> {
+                        // on below line we are displaying a toast message.
+                        //  Toast.makeText(this, "Yes clicked", Toast.LENGTH_SHORT).show()
+
+
+                    }
+*/
+                    // on below line we are setting click listener
+                    // for our negative button.
+                    DialogInterface.BUTTON_NEGATIVE -> {
+                        // on below line we are dismissing our dialog box.
+                        dialog.dismiss()
+                    }
+                }
+            }
+
+        // on below line we are creating a builder variable for our alert dialog
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+
+        // on below line we are setting message for our dialog box.
+        builder.setMessage("Please Complete Your Survey!")
+            // on below line we are setting positive
+            // button and setting text to it.
+           // .setPositiveButton("Yes", dialogClickListener)
+            // on below line we are setting negative button
+            // and setting text to it.
+            .setNegativeButton("Ok", dialogClickListener)
+            // on below line we are calling
+            // show to display our dialog.
+            .show()
 
     }
 

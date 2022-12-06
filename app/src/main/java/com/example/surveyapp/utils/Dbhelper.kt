@@ -11,9 +11,6 @@ import com.example.data.response.DownloadedSurveyListModel
 import com.example.surveyapp.OptionItem
 import com.google.gson.Gson
 
-
-
-
 class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, DATABASE_NAME ,null,1) {
 
     var answer = ""
@@ -49,15 +46,11 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
 
         val query3 = ("CREATE TABLE " + TABLE_NAME3 + " ("
                 + ID + " INTEGER PRIMARY KEY, " +
-                FULLNAME + " TEXT," +
-                GENDER + " VARCHAR," +
-                AGE + " INTEGER," +
-                PHONE + " INTEGER," +
-                ADDRESS + " VARCHAR," +
+                SURVEYPRIMARI + " INTEGER," +
                 SURVEYID + " INTEGER," +
-                SURVEYNAME + " VARCHAR," +
                 QUESTIONID + " INTEGER," +
                 OPID + " INTEGER," +
+                OPCHECK + " INTEGER," +
                 ANSWER + " VARCHAR" +
                 ")")
 
@@ -68,6 +61,10 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
         val query4 = ("CREATE TABLE " + TABLE_NAME4 + " ("
                 + ID + " INTEGER PRIMARY KEY, " +
                 FULLNAME + " TEXT," +
+                GENDER + " VARCHAR," +
+                AGE + " INTEGER," +
+                PHONE + " INTEGER," +
+                ADDRESS + " VARCHAR," +
                 SURVEYID + " INTEGER," +
                 SURVEYNAME + " VARCHAR," +
                 AUDIOFILE + " VARCHAR," +
@@ -230,7 +227,7 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
     }
 
     @SuppressLint("Range")
-    fun addTakenSurveyTable(fullname:String,gender:String,age:String,address:String,mobile:String,surveyId: String,surveyName: String,questionId: String,optionId: String, answer: String){
+    fun addTakenSurveyTable(surveyPrimary: String,surveyId: String,questionId: String,optionId: String,opCheck: String, answer: String){
 
         val inputArray = ArrayList<String>()
         val gson = Gson()
@@ -246,16 +243,11 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
 
         try {
 
-
-            cv.put(FULLNAME,fullname)
-            cv.put(GENDER,gender)
-            cv.put(AGE,age)
-            cv.put(ADDRESS,address)
-            cv.put(PHONE,mobile)
+            cv.put(SURVEYPRIMARI,surveyPrimary)
             cv.put(SURVEYID,surveyId)
-            cv.put(SURVEYNAME, surveyName)
             cv.put(QUESTIONID,questionId)
             cv.put(OPID,optionId)
+            cv.put(OPCHECK,opCheck)
             cv.put(ANSWER,answer)
 
 
@@ -275,7 +267,7 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
     }
 
     @SuppressLint("Range")
-    fun addUploadSurveyTable(fullname:String,surveyId:String,surveyName:String,audiofile:String,upload:Boolean){
+    fun addUploadSurveyTable(fullname:String,gender:String,age:String,address:String,mobile:String,surveyId:String,surveyName:String,audiofile:String,upload:Boolean):Long{
 
         val inputArray = ArrayList<String>()
         val gson = Gson()
@@ -293,6 +285,10 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
 
 
             cv.put(FULLNAME,fullname)
+            cv.put(GENDER,gender)
+            cv.put(AGE,age)
+            cv.put(ADDRESS,address)
+            cv.put(PHONE,mobile)
             cv.put(SURVEYID,surveyId)
             cv.put(SURVEYNAME,surveyName)
             cv.put(AUDIOFILE,audiofile)
@@ -309,9 +305,10 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
         Log.e("TAG121", "addTakenSurveyTable: ${TABLE_NAME4.toString()}", )
         Log.e("TAG121", "addTakenSurveyTable: ${cv.toString()}", )
 
-        db.insert(TABLE_NAME4, null, cv)
+      val insertedid=  db.insert(TABLE_NAME4, null, cv)
 
         db.close()
+        return  insertedid;
     }
 
     // below method is to get
@@ -508,6 +505,7 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
             // var whereArgs = arrayOf(qId)
             // db.execSQL("UPDATE ${TABLE_NAME2} SET answer=$answer WHERE questionID=${qId.toInt()}")
             //   db.update(TABLE_NAME2,cv,"questionID", whereArgs)
+
         }catch (e:Exception){
             Log.e("TAG16161", "answerSubmit: ${e.message}")
         }
@@ -553,6 +551,18 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
         }
     }
 
+    fun setPosition(surveyId : String,name : String){
+
+        val db = this.readableDatabase
+
+        val updateString="SELECT id FROM "+ TABLE_NAME4+ " WHERE " + "surveyID" + " = '"+surveyId+"' AND " + "fullName" + " = "+name
+        // val updateString="INSERT "+ TABLE_NAME + " SET "+ SUBMIT + " = '"+submited+"'   WHERE " + "id" + " = "+surveyId
+        Log.e("TAG8008", "answerSubmit: $updateString")
+        //db.execSQL(updateString);
+        db.rawQuery(updateString,null);
+
+    }
+
     companion object{
         // here we have defined variables for our database
 
@@ -593,13 +603,14 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
         val SPID = "SpId"
 
 
-
+        val SURVEYPRIMARI = "surveyPrimary"
         val FULLNAME  = "fullName"
         val GENDER = "gender"
         val PHONE = "phone"
         val AGE = "age"
         val ADDRESS = "address"
         val AUDIOFILE = "audio"
+        val OPCHECK = "opCheck"
 
     }
 

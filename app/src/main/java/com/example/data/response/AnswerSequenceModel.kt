@@ -1,3 +1,3 @@
 package com.example.data.response
 
-data class AnswerSequenceModel(val id : String,val question : String,val answer : String)
+data class AnswerSequenceModel(val surveyid : String,val questionid : String,val optionPosition : String,val optionid : String)

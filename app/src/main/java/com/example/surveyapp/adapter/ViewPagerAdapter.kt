@@ -11,10 +11,11 @@ import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import com.example.surveyapp.*
+import com.example.surveyapp.interfaces.OpCheckListener
 import com.example.surveyapp.interfaces.OptionsListenerInterface
 import com.example.surveyapp.utils.Dbhelper
 
-class ViewPagerAdapter(private val mContext: Context, private val itemList: ArrayList<ResponseItem>,val listener :OptionsListenerInterface ) : PagerAdapter() {
+class ViewPagerAdapter(private val mContext: Context, private val itemList: ArrayList<ResponseItem>,val listener :OptionsListenerInterface,val listenerPosition :OpCheckListener ) : PagerAdapter() {
     private var layoutInflater: LayoutInflater? = null
     val dbhelper  = Dbhelper(mContext,null)
    // var submitList = arrayListOf<SubmitAnswersModel>()
@@ -39,7 +40,7 @@ class ViewPagerAdapter(private val mContext: Context, private val itemList: Arra
         }
 
 
-            recycler.adapter = OptionsRecyclerAdapter(itemList[position].option as ArrayList<OptionItem>, mContext,listener,itemList[position].questionBankID.toString())
+            recycler.adapter = OptionsRecyclerAdapter(itemList[position].option as ArrayList<OptionItem>, mContext,listener,listenerPosition,itemList[position].questionBankID.toString())
 
         val answerlist= arrayListOf<String>()
 

@@ -43,23 +43,28 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
+
+    <RadioGroup
+        android:id="@+id/radio_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="@dimen/_5sdp"
-        android:gravity="center_vertical"
-        app:boxBackgroundColor="@color/white"
-        app:boxBackgroundMode="outline">
+        >
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/gender_Edt"
+        <RadioButton
+            android:id="@+id/radio_male"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Gender"
-            android:singleLine="true" />
+            android:text="Male"
+            android:layout_marginLeft="@dimen/_10sdp"/>
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <RadioButton
+            android:id="@+id/radio_female"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Female"
+            android:layout_marginLeft="@dimen/_10sdp"/>
+
+    </RadioGroup>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -75,7 +80,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Mobile No."
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:maxLength="10"
+            android:inputType="number"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -93,7 +100,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Age"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:maxLength="3"
+            android:inputType="number"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -111,24 +120,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Address"
-            android:singleLine="true" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="@dimen/_5sdp"
-        android:gravity="center_vertical"
-        app:boxBackgroundColor="@color/white"
-        app:boxBackgroundMode="outline">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/category_Edt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Category"
             android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>

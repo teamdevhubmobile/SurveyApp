@@ -6,10 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.surveyapp.OptionItem
 import com.example.surveyapp.databinding.QuestionItemInnerlistBinding
+import com.example.surveyapp.interfaces.OpCheckListener
 import com.example.surveyapp.interfaces.OptionsListenerInterface
 
 
-class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Context, val listener : OptionsListenerInterface, val qId : String
+class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Context, val listener : OptionsListenerInterface, val listenerPosition : OpCheckListener, val qId : String
 ) : RecyclerView.Adapter<OptionsRecyclerAdapter.ViewHolder>() {
 
     private var selectedPosition = -1
@@ -54,6 +55,8 @@ class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Con
             mList[position].position = position
 
             listener.onOptionClick(mList[position],qId)
+
+            listenerPosition.opCheckListener(position)
            // Toast.makeText(context, "${holder.binding.checkbox.text.toString()}", Toast.LENGTH_SHORT).show()
 
             notifyDataSetChanged()
@@ -72,6 +75,14 @@ class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Con
             holder.binding.checkbox.setChecked(false)
         }
 
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
     }
 
     override fun getItemCount(): Int {
