@@ -38,6 +38,7 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
                 OPTION + " VARCHAR," +
                 ANSWER + " VARCHAR," +
                 STATUS + " VARCHAR," +
+                OPTIONCHECKTYPE + " VARCHAR," +
                 ATTEMPT + " BOOLEAN" + ")")
 
         // we are calling sqlite
@@ -168,7 +169,7 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
     }
 
     @SuppressLint("Range")
-    fun addQuestion(questionId : String, surveyId : String, optionId : ArrayList<OptionItem>, spID : Int, sID : Int ){
+    fun addQuestion(questionId : String, surveyId : String, optionId : ArrayList<OptionItem>, spID : Int, sID : Int, optionCheckType : String ){
 
         val inputArray = ArrayList<String>()
         val gson = Gson()
@@ -189,6 +190,7 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
             cv.put(SPID,spID)
             cv.put(QUESTIONID,questionId)
             cv.put(QUESTION,surveyId)
+            cv.put(OPTIONCHECKTYPE,optionCheckType)
 
 
         } catch (e: Exception) {
@@ -611,6 +613,8 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
         val ADDRESS = "address"
         val AUDIOFILE = "audio"
         val OPCHECK = "opCheck"
+
+        val OPTIONCHECKTYPE = "OptionCheckType"
 
     }
 

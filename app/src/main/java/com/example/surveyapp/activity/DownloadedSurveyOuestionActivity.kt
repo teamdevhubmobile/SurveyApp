@@ -169,7 +169,7 @@ class DownloadedSurveyOuestionActivity : BaseActivity(),OptionsListenerInterface
                     Log.e("TAGop", "onCreate: "+ item)
 
                     for (op in optionList!!){
-                        Log.e("TAGop1", "onCreate: "+ op)
+                     //   Log.e("TAGop1", "onCreate: "+ op)
                         if (!op?.answers.isNullOrEmpty()){
                            answer = op?.answers.toString()
                             opId = op?.optionID.toString()
@@ -371,6 +371,7 @@ class DownloadedSurveyOuestionActivity : BaseActivity(),OptionsListenerInterface
             binding.viewPager.setPageMargin(25)
             binding.viewPager.adapter = mViewPagerAdapter
             binding.viewPager.addOnPageChangeListener(viewPagerPageChangeListener)
+            binding.viewPager.offscreenPageLimit = 1000
 
             binding.nextBtn.setOnClickListener {
 

@@ -107,7 +107,7 @@ class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<TakenSurveyModel>
         holder.binding.uploadbtn.setOnClickListener {
 
            // getAnswerSequence(mList[position].id)
-            click.onBtnClick(true,mList[position].id)
+            click.onBtnClick(true,mList[position].id,mList[position].Sno)
 
 
 
@@ -198,7 +198,7 @@ class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<TakenSurveyModel>
     }
 
     @SuppressLint("Range")
-    fun getAnswerSequence(sid : String) {
+    fun getAnswerSequence(sid : String,surveyid : String) {
 
         try {
             val db = Dbhelper(context, null)
@@ -238,7 +238,7 @@ class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<TakenSurveyModel>
             }
 
             cursor.close()
-            click.onBtnClick(true,sid)
+            click.onBtnClick(true,sid,surveyid)
 
         } catch (e: Exception) {
 

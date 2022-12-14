@@ -192,7 +192,8 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface,OpCheckL
                             responseList.get(i).question.toString(),
                             responseList.get(i).option as ArrayList<OptionItem>,
 
-                            spid,surveId.toInt()
+                            spid,surveId.toInt(),
+                            responseList.get(i).typeNumber.toString()
 
                         )
                     }
@@ -354,6 +355,9 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface,OpCheckL
                             binding.viewPager.setPageMargin(25)
                             binding.viewPager.adapter = mViewPagerAdapter
                             binding.viewPager.addOnPageChangeListener(viewPagerPageChangeListener)
+
+                            binding.viewPager.offscreenPageLimit = 1000
+
 
                             binding.nextBtn.setOnClickListener {
                                 binding.viewPager.setCurrentItem(pagenumber+1, true)
@@ -700,7 +704,7 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface,OpCheckL
                    // Log.e("TAGop", "onCreate: "+ item)
 
                     for (op in optionList!!){
-                        Log.e("TAGop1", "onCreate: "+ op)
+                    //    Log.e("TAGop1", "onCreate: "+ op)
                         if (!op?.answers.isNullOrEmpty()){
                             answer = op?.answers.toString()
                             opId = op?.optionID.toString()
@@ -723,7 +727,9 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface,OpCheckL
                 var file: File = File(""+mFileName)
                 var audio:MultipartBody.Part = getBodyFromAudioFile(file,"files")!!
 
-                viewModel.getAnswerUploadPost( withBody(s1)!!,withBody("1")!!,answermap,withBody(full_name)!!,withBody(gender)!!,withBody(phone)!!,withBody(age)!!,withBody(address)!!,
+                Log.e("TAG11", "submitApiCall: ${file.toString()}")
+
+                viewModel.getAnswerUploadPost( withBody(s1)!!,withBody(surveId)!!,answermap,withBody(full_name)!!,withBody(gender)!!,withBody(phone)!!,withBody(age)!!,withBody(address)!!,
                     audio )
 
 
@@ -740,7 +746,7 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface,OpCheckL
             for (item in myList){
 
                 //Toast.makeText(this, "$survId", Toast.LENGTH_SHORT).show()
-                Log.e("TAG987", "onCreate: $item")
+            //    Log.e("TAG987", "onCreate: $item")
             }
 
     }

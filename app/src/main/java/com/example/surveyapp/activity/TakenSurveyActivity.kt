@@ -412,7 +412,7 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
         }*/
     }
 
-    override fun onBtnClick(click: Boolean,sid: String) {
+    override fun onBtnClick(click: Boolean,sid: String,surveyId: String) {
 
         if (click == true){
             uploadbtnclick = click
@@ -420,7 +420,7 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
 
            // uploadSurvay(1,8)
             //getUserGeneralData()
-            getUserData(sid.toString())
+            getUserData(sid.toString(),surveyId.toString())
 
         }
 
@@ -428,7 +428,7 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
     }
 
     @SuppressLint("Range")
-    fun getUserData(surid:String){
+    fun getUserData(surid:String,surveyId:String){
 
 
 
@@ -503,7 +503,7 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
             var audio: MultipartBody.Part = getBodyFromAudioFile(file,"files")!!
 
 
-            viewModel.getAnswerUploadPost( withBody("2")!!,withBody("1")!!, keyanswermap,withBody(full_name)!!,withBody(gender)!!,withBody(phone)!!,withBody(age)!!,withBody(address)!!, audio )
+            viewModel.getAnswerUploadPost( withBody("2")!!,withBody(surveyId)!!, keyanswermap,withBody(full_name)!!,withBody(gender)!!,withBody(phone)!!,withBody(age)!!,withBody(address)!!, audio )
 
 
 

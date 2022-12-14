@@ -60,11 +60,10 @@ class UploadedQuestionActivity : AppCompatActivity() {
                 data.forEach {
                     Log.e("TAG", "observeSurvey: ${it.question}  ans : ${it.answer}", )
                 }
+
                 //data.add(UploadedQAModel(questionlist.toString(),answerlist.toString()))
-
-
-
                 // Setting the Adapter with the recyclerview
+
                 try {
                     binding.uploadedQuestionRecyclerView.adapter = UploadedQuestionRecyclerAdapter(data,this)
 

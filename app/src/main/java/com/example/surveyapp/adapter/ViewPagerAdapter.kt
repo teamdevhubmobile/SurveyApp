@@ -33,14 +33,8 @@ class ViewPagerAdapter(private val mContext: Context, private val itemList: Arra
        // Toast.makeText(mContext, "$textview", Toast.LENGTH_SHORT).show()
 
 
-        if (itemList[position].typeNumber == "1"){
 
-
-
-        }
-
-
-            recycler.adapter = OptionsRecyclerAdapter(itemList[position].option as ArrayList<OptionItem>, mContext,listener,listenerPosition,itemList[position].questionBankID.toString())
+            recycler.adapter = OptionsRecyclerAdapter(itemList[position].option as ArrayList<OptionItem>, mContext,listener,listenerPosition,itemList[position].questionBankID.toString(),itemList[position].typeNumber.toString())
 
         val answerlist= arrayListOf<String>()
 
@@ -74,6 +68,8 @@ class ViewPagerAdapter(private val mContext: Context, private val itemList: Arra
         return itemList.size
     }
 
+
+
     fun getList() : ArrayList<ResponseItem>{
 
         return itemList
@@ -88,4 +84,6 @@ class ViewPagerAdapter(private val mContext: Context, private val itemList: Arra
        // val view = `object` as View
         container.removeView(`object` as RelativeLayout)
     }
+
+
 }
