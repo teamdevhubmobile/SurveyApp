@@ -1,5 +1,6 @@
 package com.example.surveyapp
 
+import com.example.data.response.OptionCheckModel
 import com.google.gson.annotations.SerializedName
 import java.text.FieldPosition
 
@@ -17,17 +18,21 @@ data class QuestionWithOptionResponse2(
 
 	data class ResponseItem(
 
-	@field:SerializedName("questionBankID")
+		@field:SerializedName("questionBankID")
 	val questionBankID: String? = null,
 
-	@field:SerializedName("question")
+		@field:SerializedName("question")
 	val question: String? = null,
 
-	@field:SerializedName("typeNumber")
+		@field:SerializedName("typeNumber")
 	val typeNumber: String? = null,
 
-	@field:SerializedName("option")
-	val option: List<OptionItem?>? = null
+		@field:SerializedName("option")
+	val option: List<OptionItem?>? = null,
+
+		var ansListCheck: List<OptionCheckModel>? = null
+
+
 )
 
    data class OptionItem(

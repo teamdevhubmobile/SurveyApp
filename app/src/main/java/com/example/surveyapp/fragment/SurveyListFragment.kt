@@ -44,13 +44,12 @@ class SurveyListFragment : Fragment(),OptionsListenerInterface {
 
         }
 
-     /*   binding.takenSurvey.setOnClickListener {
+        binding.taken.setOnClickListener {
 
             val  intent = Intent(context, TakenSurveyActivity::class.java)
             startActivity(intent)
 
         }
-*/
 
         return (binding.root)
     }

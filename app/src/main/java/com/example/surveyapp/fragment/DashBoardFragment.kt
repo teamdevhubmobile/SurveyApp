@@ -32,18 +32,21 @@ class DashBoardFragment : Fragment() {
 
         binding.dashboardWebview.settings.setSupportZoom(true)
 
-     /*   override fun onBackPressed() {
-            // if your webview can go back it will go back
-            if  ( binding.dashboardWebview.canGoBack())
-                binding.dashboardWebview.goBack()
-            // if your webview cannot go back
-            // it will exit the application
-            else
-                super.onBackPressed()
-        }*/
 
         return binding.root
     }
+
+
+   /* override fun onBackPressed() {
+        // if your webview can go back it will go back
+        if  ( binding.dashboardWebview.canGoBack())
+            binding.dashboardWebview.goBack()
+        // if your webview cannot go back
+        // it will exit the application
+        else
+            super.onBackPressed()
+    }*/
+
 
     // if you press Back button this code will work
 

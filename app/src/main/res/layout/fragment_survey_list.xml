@@ -34,13 +34,13 @@
             android:layout_alignParentBottom="true"
             android:text="Offline Survey" />
 
-   <!--     <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/taken_survey"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/taken"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/_50sdp"
-            android:layout_marginLeft="@dimen/_10sdp" />-->
+            android:layout_marginLeft="@dimen/_10sdp" />
 
 </RelativeLayout>
 </layout>

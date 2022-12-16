@@ -256,8 +256,6 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
         try{
             val db = Dbhelper(this, null)
 
-
-
             val cursor = db.getUploadSurvey()
 
             cursor!!.moveToFirst()
@@ -273,8 +271,12 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
             val usernPhoneCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.PHONE))
             val usernAudioCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.AUDIOFILE))
 
+            if (Sno == 1){
 
-            full_name = usernameCheck
+                full_name = username
+
+            }
+
             gender = usernGenderCheck
             age = usernAgeCheck
             address = usernAddressCheck
@@ -304,7 +306,14 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
                 val usernAudioCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.AUDIOFILE))
 
 
-                full_name = usernameCheck
+
+                if (Sno == 1){
+
+                    full_name = username
+
+                }
+
+
                 gender = usernGenderCheck
                 age = usernAgeCheck
                 address = usernAddressCheck
@@ -434,8 +443,6 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
 
         try{
             val db = Dbhelper(this, null)
-
-
 
             val cursor = db.getTakenSurvey()
 

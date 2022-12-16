@@ -164,6 +164,8 @@ class DownloadedSurveyOuestionActivity : BaseActivity(),OptionsListenerInterface
 
                     var answer =""
                     var opId =""
+                    var opIdmulti = arrayListOf<String>()
+                    var opPositionmulti = arrayListOf<String>()
                     var opPosition =""
 
                     Log.e("TAGop", "onCreate: "+ item)
@@ -173,10 +175,27 @@ class DownloadedSurveyOuestionActivity : BaseActivity(),OptionsListenerInterface
                         if (!op?.answers.isNullOrEmpty()){
                            answer = op?.answers.toString()
                             opId = op?.optionID.toString()
+                           // opIdmulti.add(opId)
                             opPosition = op?.position.toString()
+
+
                         }
 
                     }
+
+                    if (!item.ansListCheck.isNullOrEmpty()){
+
+                        var optioncheckList = item.ansListCheck
+
+                        for (optionItem in optioncheckList!!){
+
+                            opIdmulti.add(optionItem.optionId.toString())
+                            opPositionmulti.add(optionItem.optionPosition.toString())
+
+                        }
+
+                    }
+
                     db.answerSubmit(item.questionBankID.toString(), answer,spid.toInt(),opId,opPosition)
 
                    /* for(i in 0 until opcheck.size){
@@ -187,10 +206,11 @@ class DownloadedSurveyOuestionActivity : BaseActivity(),OptionsListenerInterface
 
                     }*/
 
+                    Log.e("TAG332", "onCreate: ${opIdmulti}" )
 
 
-                    db.addTakenSurveyTable(insertedid.toString(),sid.toString(),item.questionBankID.toString(),opId,
-                        opPosition,answer)
+                    db.addTakenSurveyTable(insertedid.toString(),sid.toString(),item.questionBankID.toString(),opIdmulti.toString(),
+                        opPositionmulti.toString(),answer)
 
 
 

@@ -7,8 +7,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.data.response.OptionCheckModel
 import com.example.surveyapp.OptionItem
 import com.example.surveyapp.databinding.QuestionItemInnerlistBinding
+import com.example.surveyapp.interfaces.AnswerListCheck
 import com.example.surveyapp.interfaces.OpCheckListener
 import com.example.surveyapp.interfaces.OptionsListenerInterface
 import com.example.surveyapp.utils.Dbhelper
@@ -16,14 +18,14 @@ import com.example.surveyapp.utils.Dbhelper
 
 
 class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Context, val listener : OptionsListenerInterface, val listenerPosition : OpCheckListener, val qId : String,
-                             val type : String
+                             val type : String, val oftype : String, val answerListCheckListener: AnswerListCheck
 ) : RecyclerView.Adapter<OptionsRecyclerAdapter.ViewHolder>() {
 
     private var selectedPosition = -1
     var checkedItem = ""
     var ans = arrayOf<String>()
     var pos = arrayOf<String>()
-    var typee = ""
+    var typee = arrayListOf<String>()
 
     inner class ViewHolder(val binding: QuestionItemInnerlistBinding) : RecyclerView.ViewHolder(binding.root){}
 
@@ -39,7 +41,9 @@ class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Con
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.binding.model =mList[position]
-        getSelectType()
+        var answerListCheck = arrayListOf<OptionCheckModel>()
+
+        //  getSelectType()
         
       /*  holder.binding.checkbox.setOnCheckedChangeListener { compoundButton, b ->
 
@@ -57,14 +61,18 @@ class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Con
                 holder.binding.checkbox.setChecked(false)
             }*/
 
-        if (type.equals("1") || typee.equals("1")){
+        Log.e("TAGCheck", "onBindViewHolder: $typee", )
+
+
+
+        if (type.equals("1") || oftype.equals("1")){
 
             holder.binding.checkbox.setOnCheckedChangeListener { buttonView, isChecked ->
                 if (isChecked) {
 
-
-
-
+                    if (!answerListCheck.isNullOrEmpty()){
+                        answerListCheck.clear()
+                    }
                     selectedPosition = position
 
                     ans = arrayOf(mList[position].name.toString())
@@ -76,7 +84,11 @@ class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Con
                     mList[position].position = position
   */
                     mList[position].answers = ans.toString()
-                    mList[position].position = pos.size.toInt()
+                    mList[position].position = pos.size
+
+                    answerListCheck.add(OptionCheckModel(mList[position].optionID!!.toInt(),position))
+
+                    answerListCheckListener.ansListCheck(answerListCheck)
 
                     listener.onOptionClick(mList[position],qId)
 
@@ -105,41 +117,41 @@ class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Con
 
             }
 
-        }else if (type.equals("2") || typee.equals("2")){
+        }else if (type.equals("2") || oftype.equals("2")){
 
-            holder.binding.checkbox.setOnClickListener { view ->
+            holder.binding.checkbox.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
 
-
-                /*    selectedPosition = holder.adapterPosition
+                    //   selectedPosition = position
 
                     mList[position].answers = mList[position].name
                     mList[position].position = position
 
-                    listener.onOptionClick(mList[position],qId)
+                    var opModel =  OptionCheckModel(mList[position].optionID!!.toInt(), position)
 
-                    listenerPosition.opCheckListener(position)
+                    if (answerListCheck.isNullOrEmpty()){
 
-                    notifyDataSetChanged()*/
+                        answerListCheck.add(opModel)
+                    }else{
 
-                // Toast.makeText(context, "${holder.binding.checkbox.text.toString()}", Toast.LENGTH_SHORT).show()
-
-                //  if (!type.equals("1")){
-
-                selectedPosition = position
-
-                mList[position].answers = mList[position].name
-                mList[position].position = position
-
-                listener.onOptionClick(mList[position],qId)
-                // listenerPosition.opCheckListener(position)
-                // Toast.makeText(context, "${holder.binding.checkbox.text.toString()}", Toast.LENGTH_SHORT).show()
-                Toast.makeText(context, "2", Toast.LENGTH_SHORT).show()
+                        if (!answerListCheck.contains(opModel)){
+                            answerListCheck.add(opModel)
+                        }
+                    }
 
 
+                    Log.e("TAGCheckList", "onBindViewHolder: ${answerListCheck.size}",)
 
-                //   }else if(!type.equals("2")){
+                    answerListCheckListener.ansListCheck(answerListCheck)
 
-                /*  selectedPosition = holder.adapterPosition
+                    listener.onOptionClick(mList[position], qId)
+                    // listenerPosition.opCheckListener(position)
+                    // Toast.makeText(context, "${holder.binding.checkbox.text.toString()}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "2", Toast.LENGTH_SHORT).show()
+
+                    //   }else if(!type.equals("2")){
+
+                    /*  selectedPosition = holder.adapterPosition
 
                   mList[position].answers = mList[position].name
                   mList[position].position = position
@@ -156,7 +168,23 @@ class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Con
             //  }
 
               notifyDataSetChanged()*/
+                }else{
 
+                    mList[position].answers = mList[position].name
+                    mList[position].position = position
+
+                    var opModel =  OptionCheckModel(mList[position].optionID!!.toInt(), position)
+
+                    if (!answerListCheck.isNullOrEmpty()){
+
+                        if (answerListCheck.contains(opModel)){
+                            answerListCheck.remove(opModel)
+                        }
+                    }
+
+                    answerListCheckListener.ansListCheck(answerListCheck)
+
+                }
             }
         }
 
@@ -176,7 +204,7 @@ class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Con
         return mList.size
     }
 
-    @SuppressLint("Range")
+  /*  @SuppressLint("Range")
     fun getSelectType(){
 
             val db = Dbhelper(context, null)
@@ -188,21 +216,28 @@ class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Con
             cursor!!.moveToFirst()
 
         val type = cursor.getString(cursor.getColumnIndex(Dbhelper.OPTIONCHECKTYPE))
+        val id2 = cursor.getString(cursor.getColumnIndex(Dbhelper.ID))
 
-        typee = type
+         typee.add(type)
 
-        Log.e("TAG1112101", "getSelectType: $type" )
+        Log.e("TAG1112101", "getSelectType: $typee" )
+        Log.e("TAGm", "getSelectType: ${id2 +"=="+ typee}" )
 
         while (cursor.moveToNext()) {
 
             val type = cursor.getString(cursor.getColumnIndex(Dbhelper.OPTIONCHECKTYPE))
+            val id = cursor.getString(cursor.getColumnIndex(Dbhelper.ID))
 
-            typee = type
 
-            Log.e("TAG1112101", "getSelectType: $type" )
+            typee.add(type)
+            Log.e("TAGm", "getSelectType: ${id +"=="+ typee}" )
 
         }
 
-    }
+        Log.e("TAG1112101", "getSelectType: $typee" )
+        Log.e("TAG1112101", "getSelectType: ${typee.size}" )
+
+
+    }*/
 
 }
