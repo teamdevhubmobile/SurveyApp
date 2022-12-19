@@ -26,8 +26,8 @@ class HomeViewModel : ViewModel() {
   private var forgetpasswordLiveData = MutableLiveData<ForgetPasswordResponse>()
   //private var questionsLiveData = MutableLiveData<QuestionsResponse>()
   private var questionsLiveData = MutableLiveData<QuestionWithOptionResponse2>()
-  private var answerUploadLiveData = MutableLiveData<Boolean>()
- // private var answerUploadLiveData = MutableLiveData<UpdateAnswerAppResponse>()
+  //private var answerUploadLiveData = MutableLiveData<Boolean>()
+  private var answerUploadLiveData = MutableLiveData<UpdateAnswerAppResponse>()
   private var showLiveData = MutableLiveData<ShowResponse2>()
   private var uploadedSurveyListLiveData = MutableLiveData<UploadedSurveyListResponse>()
   private var uploadedSurveyQuestionListLiveData = MutableLiveData<UploadedSurveyQuestionResponse>()
@@ -169,7 +169,12 @@ class HomeViewModel : ViewModel() {
       .subscribeOn(Schedulers.io())
       .subscribe ({result ->
 
-        answerUploadLiveData.value = result.status!!
+          if (result.status!!){
+             // answerUploadLiveData.value = result.status!!
+              answerUploadLiveData.value = result!!
+          }
+
+
      //   Log.e("TAG", "ans : "+ result.options )
 
      /*   if(result.status == true){

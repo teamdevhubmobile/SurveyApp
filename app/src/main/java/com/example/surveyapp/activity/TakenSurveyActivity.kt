@@ -2,27 +2,28 @@ package com.example.surveyapp.activity
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.data.base.BaseActivity
 import com.example.data.response.AnswerSequenceModel
-import com.example.data.response.DownloadedSurveyListModel
 import com.example.data.response.TakenSurveyModel
 import com.example.surveyapp.HomeViewModel
 import com.example.surveyapp.R
 import com.example.surveyapp.adapter.DownloadedSurveyListRecyclerAdapter
-import com.example.surveyapp.databinding.SettingsActivityBinding
 import com.example.surveyapp.databinding.TakenSurveyActivityBinding
 import com.example.surveyapp.interfaces.TakenSuveyClick
 import com.example.surveyapp.mPrefs
 import com.example.surveyapp.utils.Dbhelper
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import okhttp3.MultipartBody
 import java.io.File
+import java.lang.reflect.Type
+
 
 class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
 
@@ -51,6 +52,12 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
     var usernameCheck = ""
     var uploadbtnclick = false
     val keyanswermap = hashMapOf<String, String>()
+
+    var opIdArray = arrayListOf<String>()
+
+    var surveySerialId = ""
+    var surveyIdnumber = ""
+    var uploadedCheck = 0
 
 
 
@@ -81,7 +88,7 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
         this.spId = spId
         this.sid = sid
         this.mPosition = position
-        Log.e("TAG90", "onClick: $sid",)
+        Log.e("TAG90", "onClick: $sid")
 
       //  viewModel.getShow(s1, "1")
 
@@ -95,7 +102,7 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
 
         val curs = db.getName()
 
-        Log.e("TAG655", "uploadSurvay: $curs", )
+        Log.e("TAG655", "uploadSurvay: $curs")
 
         cursor?.moveToFirst()
 
@@ -132,7 +139,7 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
             answermap.put(answerData, opId.toString())
         }
 
-        Log.e("TAGHAT", "onCreate: ${qid + position + opId}",)
+        Log.e("TAGHAT", "onCreate: ${qid + position + opId}")
         while (cursor!!.moveToNext()) {
 
             val qid = cursor?.getString(cursor.getColumnIndex(Dbhelper.QUESTIONID))
@@ -183,8 +190,8 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
         var audio: MultipartBody.Part = getBodyFromAudioFile(file,"files")!!
 
 
-        Log.e("TAG0012", "uploadSurvay: $audio", )
-        Log.e("TAG0013", "uploadSurvay:  $answermap", )
+        Log.e("TAG0012", "uploadSurvay: $audio")
+        Log.e("TAG0013", "uploadSurvay:  $answermap")
 
         viewModel.getAnswerUploadPost( withBody(""+s1)!!,withBody("1")!!, answermap,withBody(full_name)!!,withBody(gender)!!,withBody(phone)!!,withBody(age)!!,withBody(address)!!,
             audio )
@@ -207,11 +214,14 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
             .observe(this, Observer {
 
 
-                if (it) {
+                if (it.status!!) {
 
                     //Log.e("TAG", "this is iyt : $it")
 
+                    db.uploadSurveyComplete(surveySerialId.toInt(),surveyIdnumber.toInt(),1)
+
                     var uploaded = db.uploadSurvey(spId.toInt(), 1)
+                    opIdArray.clear()
                     if (uploaded){
 
                         getDBData()
@@ -271,12 +281,15 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
             val usernPhoneCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.PHONE))
             val usernAudioCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.AUDIOFILE))
 
+
             if (Sno == 1){
 
                 full_name = username
 
             }
 
+
+            uploadedCheck = uploaded
             gender = usernGenderCheck
             age = usernAgeCheck
             address = usernAddressCheck
@@ -285,7 +298,7 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
 
 
 
-            var mylist = TakenSurveyModel(username.toString(),surveyId.toString(),surveyName.toString(),Sno.toString())
+            var mylist = TakenSurveyModel(username.toString(),surveyId.toString(),surveyName.toString(),Sno.toString(),uploadedCheck)
             list.add(mylist)
 
             Log.e("TAG", "getDBData: Survey To Upload  ${Sno.toString() +" = "+username +" = "+surveyName +" = "+surveyId +" = "+uploaded +" = "}" )
@@ -305,6 +318,7 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
                 val usernPhoneCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.PHONE))
                 val usernAudioCheck = cursor.getString(cursor.getColumnIndex(Dbhelper.AUDIOFILE))
 
+                uploadedCheck = uploaded
 
 
                 if (Sno == 1){
@@ -321,7 +335,7 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
                 audiofile = usernAudioCheck
 
 
-                var mylist = TakenSurveyModel(username.toString(),surveyId.toString(),surveyName.toString(),Sno.toString())
+                var mylist = TakenSurveyModel(username.toString(),surveyId.toString(),surveyName.toString(),Sno.toString(),uploadedCheck)
                 list.add(mylist)
 
                 Log.e("TAG", "getDBData: Survey To Upload  ${Sno.toString() +" = "+username +" = "+surveyName +" = "+surveyId +" = "+uploaded +" = "}" )
@@ -429,6 +443,10 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
 
            // uploadSurvay(1,8)
             //getUserGeneralData()
+
+            surveySerialId = sid
+            surveyIdnumber = surveyId
+
             getUserData(sid.toString(),surveyId.toString())
 
         }
@@ -456,17 +474,54 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
             val optionId = cursor.getString(cursor.getColumnIndex(Dbhelper.OPID))
             val optionPosition = cursor.getString(cursor.getColumnIndex(Dbhelper.OPCHECK))
 
-            Log.e("TAG001100331", "getUserData: ${surid == surveyPrimary}", )
+            Log.e("TAG001100331", "getUserData: ${surid == surveyPrimary}")
 
 
             if (surid == surveyPrimary){
 
-                Log.e("TAG001100221", "getUserData: ${surid == surveyPrimary}", )
+                Log.e("TAG001100221", "getUserData: ${surid == surveyPrimary}")
 
-                keyanswer = "answer"+"["+surveyIDcheck+"]"+"["+questionId+"]"+"["+optionPosition+"]"
-                keyvalue = optionId
+               /* for (i in optionId){
 
-                keyanswermap.put(keyanswer,keyvalue)
+                    opIdArray.add(i.toString())
+
+                }
+
+                Log.e("TAG1214", "getUserData: $opIdArray", )
+*/
+
+
+                val listType: Type = object : TypeToken<List<String>?>() {}.type
+
+                val myModelList: List<String> = Gson().fromJson(optionId, listType)
+
+                val listTypeOpposition: Type = object : TypeToken<List<String>?>() {}.type
+
+                val myModelListOpPosition: List<String> = Gson().fromJson(optionPosition, listTypeOpposition)
+
+                for (i in 0 until myModelList.size){
+
+                    keyanswer = "answer"+"["+surveyIDcheck+"]"+"["+questionId+"]"+"["+myModelListOpPosition.get(i)+"]"
+                    //keyanswer = "answer"+"["+surveyIDcheck+"]"+"["+questionId+"]"+"["+optionPosition+"]"
+                  //  opIdArray.add(optionId.split(",").toString().removeSuffix("]").removePrefix("[").trim())
+                    keyvalue = myModelList.get(i)
+
+                    keyanswermap.put(keyanswer,keyvalue)
+                }
+
+                Log.e("TAG443", "getUserData: $myModelList", )
+
+
+
+
+                //  for (i in opIdArray){
+
+                //    keyvalue = opIdArray.get(i.toInt())
+
+                //  Log.e("TAG1219", "getUserData: $keyvalue", )
+                //}
+
+
             }
 
 
@@ -482,23 +537,47 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
                 val optionId = cursor.getString(cursor.getColumnIndex(Dbhelper.OPID))
                 val optionPosition = cursor.getString(cursor.getColumnIndex(Dbhelper.OPCHECK))
 
-                Log.e("TAG001100331", "getUserData: ${surid == surveyPrimary}", )
+                Log.e("TAG001100331", "getUserData: ${surid == surveyPrimary}")
 
 
                 if (surid == surveyPrimary){
 
-                    Log.e("TAG001100221", "getUserData: ${surid == surveyPrimary}", )
+                    Log.e("TAG001100221", "getUserData: ${surid == surveyPrimary}")
+
+                    val listType: Type = object : TypeToken<List<String>?>() {}.type
+
+                    val myModelList: List<String> = Gson().fromJson(optionId, listType)
+
+                    val listTypeOpposition: Type = object : TypeToken<List<String>?>() {}.type
+
+                    val myModelListOpPosition: List<String> = Gson().fromJson(optionPosition, listTypeOpposition)
+
+                    for (i in 0 until myModelList.size){
+
+                        keyanswer = "answer"+"["+surveyIDcheck+"]"+"["+questionId+"]"+"["+myModelListOpPosition.get(i)+"]"
+                        //keyanswer = "answer"+"["+surveyIDcheck+"]"+"["+questionId+"]"+"["+optionPosition+"]"
+                        //  opIdArray.add(optionId.split(",").toString().removeSuffix("]").removePrefix("[").trim())
+                        keyvalue = myModelList.get(i)
+
+                        keyanswermap.put(keyanswer,keyvalue)
+                    }
 
 
-                    keyanswer = "answer"+"["+surveyIDcheck+"]"+"["+questionId+"]"+"["+optionPosition+"]"
-                    keyvalue = optionId
 
 
-                    keyanswermap.put(keyanswer,keyvalue)
+                    //  for (i in opIdArray){
+
+                    //    keyvalue = opIdArray.get(i.toInt())
+
+                      //  Log.e("TAG1219", "getUserData: $keyvalue", )
+                    //}
 
 
+                   // keyanswermap.put(keyanswer,keyvalue)
 
                 }
+
+
 
 
 //                Log.e("TAG1************************* 111", "getDBData: $keyanswermap", )
@@ -509,10 +588,22 @@ class TakenSurveyActivity : BaseActivity() ,OnCLick, TakenSuveyClick {
             var file: File = File(""+ audiofile.toString())
             var audio: MultipartBody.Part = getBodyFromAudioFile(file,"files")!!
 
+            for (position in 0 until opIdArray.size){
 
-            viewModel.getAnswerUploadPost( withBody("2")!!,withBody(surveyId)!!, keyanswermap,withBody(full_name)!!,withBody(gender)!!,withBody(phone)!!,withBody(age)!!,withBody(address)!!, audio )
+                Log.e("TAG214",
+                    ("getUserData: ${opIdArray.get(position)}  " ==  " ${position}} ").toString()
+                )
 
+            }
 
+           /* val listType: Type = object : TypeToken<List<String>?>() {}.type
+
+            val myModelList: List<String> = Gson().fromJson(opIdArray.toString(), listType)
+
+            Log.e("TAG213", "getUserData: ${opIdArray}")
+            Log.e("TAG215", "getUserData: ${myModelList}")*/
+
+            viewModel.getAnswerUploadPost( withBody(""+s1)!!,withBody(surveyId)!!, keyanswermap,withBody(full_name)!!,withBody(gender)!!,withBody(phone)!!,withBody(age)!!,withBody(address)!!, audio )
 
 
             cursor.close()

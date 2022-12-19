@@ -348,7 +348,7 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface,OpCheckL
 
                             // textListt =  it.response?.get() as ArrayList<OptionItem>
 
-                            mViewPagerAdapter = ViewPagerAdapter(this@SurveyQuestionsActivity,   it.response as ArrayList<ResponseItem>,this ,this)
+                            mViewPagerAdapter = ViewPagerAdapter(this@SurveyQuestionsActivity,   it.response as ArrayList<ResponseItem>,this ,this,"")
                             binding.viewPager.pageMargin = 15
                             binding.viewPager.setPadding(50, 0, 50, 0);
                             binding.viewPager.setClipToPadding(false)

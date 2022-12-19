@@ -101,18 +101,27 @@ class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<TakenSurveyModel>
             holder.binding.uploadbtn.setText("Uploaded")
         }*/
 
+        if (mList[position].uploaded == 1){
+            holder.binding.uploadbtn.setText("Uploaded")
+        }
 
         holder.binding.txt.setText(mList[position].username.toString())
+
+       /* if (mList[position].uploaded == 0){
+            holder.binding.uploadbtn.setText("Pending")
+        }else if (mList[position].uploaded == 1){
+            holder.binding.uploadbtn.setText("Uploaded")
+        }*/
+
 
         holder.binding.uploadbtn.setOnClickListener {
 
            // getAnswerSequence(mList[position].id)
-            click.onBtnClick(true,mList[position].id,mList[position].Sno)
 
+            if (holder.binding.uploadbtn.text.equals("Pending")) {
 
-
-            if (holder.binding.uploadbtn.text.equals("Upload")) {
                 OnItemCLick.onClick(mList[position].id.toInt(), mList[position].Sno.toInt(),position)
+                click.onBtnClick(true,mList[position].id,mList[position].Sno)
             }
 
           /*  apiClient.getAnswersUploadPost()
@@ -155,41 +164,10 @@ class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<TakenSurveyModel>
         }
 
 
-/*
-        val cursor = dbhelper.getName()
-        cursor!!.moveToFirst()
-
-        val id = cursor.getString(cursor.getColumnIndex(Dbhelper.ID))
-        val name = cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYNAME))
-        // = holder.binding.txt.append())
-      // val name =  holder.binding.txt.append(cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYNAME)))
-
-        while(cursor.moveToNext()) {
-            //binding.txt.append(cursor.getString(cursor.getColumnIndex(Dbhelper.SURVEYNAME)) + "\n")
-
-        }
-        cursor.close()
-
-
-
         //holder.binding.txt.setText(dbhelper.addSurvey(mList[position].id.toString(),mList[position].name.toString(),"this will show after uploaded").toString())
         //holder.binding.txt.setText(""+id+" • "+name+"")
 
         // holder.binding.model = mList[position]
-        holder.binding.downloadImg.setOnClickListener {
-
-
-
-        }
-        holder.binding.nametext.setOnClickListener {
-
-
-            intent = Intent(context, SurveyQuestionsActivity::class.java)
-            intent.putExtra("id", mList[position].surveyId.toString())
-            intent.putExtra("nid", mList[position].name.toString())
-            context.startActivity(intent)
-        }
-*/
 
     }
 

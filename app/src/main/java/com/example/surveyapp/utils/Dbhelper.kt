@@ -373,6 +373,7 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
 
     }
 
+
    /* fun spID(surveyID : String, primaryID : String){
 
         this.answer = answer
@@ -563,6 +564,47 @@ class Dbhelper(context: Context, nothing: Nothing?): SQLiteOpenHelper(context, D
         //db.execSQL(updateString);
         db.rawQuery(updateString,null);
 
+    }
+
+    fun uploadSurveyComplete(SId : Int,surveyId : Int, uploaded: Int) : Boolean{
+
+        try {
+
+            val cv = ContentValues()
+            //cv.put(ANSWER,answer)
+            // cv.put(ID,qId)
+
+            val db = this.readableDatabase
+
+            val updateString="UPDATE "+ TABLE_NAME4 + " SET "+ UPLOADED + " = '"+uploaded+"'   WHERE " + "surveyID" + " = '"+surveyId+"' AND " + "id" + " = "+SId
+            //val updateString="INSERT "+ TABLE_NAME + " SET "+ UPLOADED + " = '"+uploaded+"'   WHERE " + "id" + " = "+surveyId
+            Log.e("TAG8008", "answerSubmit: $updateString")
+            db.execSQL(updateString);
+            // db.rawQuery("INSERT "+ TABLE_NAME2 + " SET "+ ANSWER + " = '"+answer+"'   WHERE " + "questionID" + " = "+qId, null);
+
+/*
+            val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME2 WHERE questionID = $qId ", null)
+
+            if (cursor.moveToFirst()) {
+                val columnNames = cursor.columnNames
+
+                for (i in columnNames) {
+                    // Assume every column is int
+                    Log.e("TAG102", "answerSubmit: "+ cursor.getString( cursor.getColumnIndex("answer") ) )
+                }
+            }*/
+
+            // cursor.close()
+
+            // var whereArgs = arrayOf(qId)
+            // db.execSQL("UPDATE ${TABLE_NAME2} SET answer=$answer WHERE questionID=${qId.toInt()}")
+            //   db.update(TABLE_NAME2,cv,"questionID", whereArgs)
+
+        }catch (e:Exception){
+            Log.e("TAG16161", "answerSubmit: ${e.message}")
+        }
+
+        return true
     }
 
     companion object{

@@ -26,7 +26,7 @@ class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Con
     var ans = arrayOf<String>()
     var pos = arrayOf<String>()
     var typee = arrayListOf<String>()
-
+    var answerListCheck = arrayListOf<OptionCheckModel>()
     inner class ViewHolder(val binding: QuestionItemInnerlistBinding) : RecyclerView.ViewHolder(binding.root){}
 
     override fun onCreateViewHolder(
@@ -41,7 +41,7 @@ class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Con
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.binding.model =mList[position]
-        var answerListCheck = arrayListOf<OptionCheckModel>()
+
 
         //  getSelectType()
         

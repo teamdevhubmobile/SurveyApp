@@ -85,6 +85,8 @@ class DownloadedSurveyOuestionActivity : BaseActivity(),OptionsListenerInterface
     var customermobile = ""
     //val dbhelper2 = Dbhelper2(this,null)
 
+    var surveyPrimary = ""
+
 
     @SuppressLint("Range")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,6 +107,7 @@ class DownloadedSurveyOuestionActivity : BaseActivity(),OptionsListenerInterface
        customermobile =  intent.getStringExtra("mobile").toString()
        customeraddress =  intent.getStringExtra("address").toString()
         surveyName =  intent.getStringExtra("surveyName").toString()
+        surveyPrimary = intent.getStringExtra("spid").toString()
 
         val cursor = db.getQuestion(spid!!.toInt())
 
@@ -384,7 +387,7 @@ class DownloadedSurveyOuestionActivity : BaseActivity(),OptionsListenerInterface
         try {
 
 
-            mViewPagerAdapter = ViewPagerAdapter(this@DownloadedSurveyOuestionActivity, mList,this,this)
+            mViewPagerAdapter = ViewPagerAdapter(this@DownloadedSurveyOuestionActivity, mList,this,this,surveyPrimary)
             binding.viewPager.pageMargin = 15
             binding.viewPager.setPadding(50, 0, 50, 0);
             binding.viewPager.setClipToPadding(false)

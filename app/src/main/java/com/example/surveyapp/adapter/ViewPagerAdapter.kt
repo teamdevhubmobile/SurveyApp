@@ -19,7 +19,7 @@ import com.example.surveyapp.interfaces.OptionsListenerInterface
 import com.example.surveyapp.utils.Dbhelper
 import java.lang.Exception
 
-class ViewPagerAdapter(private val mContext: Context, private val itemList: ArrayList<ResponseItem>,val listener :OptionsListenerInterface,val listenerPosition :OpCheckListener ) : PagerAdapter() {
+class ViewPagerAdapter(private val mContext: Context, private val itemList: ArrayList<ResponseItem>,val listener :OptionsListenerInterface,val listenerPosition :OpCheckListener,val surveyPrimary : String ) : PagerAdapter() {
     private var layoutInflater: LayoutInflater? = null
     val dbhelper  = Dbhelper(mContext,null)
    // var submitList = arrayListOf<SubmitAnswersModel>()
@@ -37,11 +37,11 @@ class ViewPagerAdapter(private val mContext: Context, private val itemList: Arra
         textview.setText(HtmlCompat.fromHtml( itemList[position].question.toString(), HtmlCompat.FROM_HTML_MODE_COMPACT))
         idtextview.text = itemList[position].questionBankID+". ".toString()
 
-     //   try {
+        try {
             getSelectType()
-       // }catch (e:Exception){
+        }catch (e:Exception){
 
-       // }
+        }
 
 
         if (typee.isEmpty()){
@@ -132,7 +132,7 @@ class ViewPagerAdapter(private val mContext: Context, private val itemList: Arra
 
         val db = Dbhelper(mContext, null)
 
-        val cursor = db.getQuestion(1)
+        val cursor = db.getQuestion(surveyPrimary.toInt())
 
         if (cursor == null) {
 
