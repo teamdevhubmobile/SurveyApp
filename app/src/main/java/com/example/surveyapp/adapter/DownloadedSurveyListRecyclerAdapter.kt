@@ -100,9 +100,9 @@ class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<TakenSurveyModel>
             holder.binding.uploadbtn.setBackgroundColor(Color.GREEN)
             holder.binding.uploadbtn.setText("Uploaded")
         }*/
-
         if (mList[position].uploaded == 1){
             holder.binding.uploadbtn.setText("Uploaded")
+            holder.binding.uploadbtn.setBackgroundColor(Color.GREEN)
         }
 
         holder.binding.txt.setText(mList[position].username.toString())
@@ -119,6 +119,12 @@ class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<TakenSurveyModel>
            // getAnswerSequence(mList[position].id)
 
             if (holder.binding.uploadbtn.text.equals("Pending")) {
+
+
+                if (mList[position].uploaded == 1) {
+                    holder.binding.uploadbtn.setText("Uploaded")
+                    holder.binding.uploadbtn.setBackgroundColor(Color.GREEN)
+                }
 
                 OnItemCLick.onClick(mList[position].id.toInt(), mList[position].Sno.toInt(),position)
                 click.onBtnClick(true,mList[position].id,mList[position].Sno)
@@ -169,6 +175,14 @@ class DownloadedSurveyListRecyclerAdapter(var mList: ArrayList<TakenSurveyModel>
 
         // holder.binding.model = mList[position]
 
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
     }
 
     override fun getItemCount(): Int {

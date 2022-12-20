@@ -1,6 +1,7 @@
 package com.example.surveyapp
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.data.requests.UploadAnswerRequest
@@ -193,7 +194,7 @@ class HomeViewModel : ViewModel() {
 
       }, { error ->
         loaderLiveData.value = false
-        //    Toast.makeText(MainApplication.applicationInstance.baseContext,error.message, Toast.LENGTH_LONG).show()
+        Toast.makeText(MainApplication.applicationInstance, "You are Offline Please try again later", Toast.LENGTH_SHORT).show()
         Log.e("TAG32122", "ans : "+ error.message )
       })
   }

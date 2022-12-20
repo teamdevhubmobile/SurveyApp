@@ -3,28 +3,24 @@ package com.example.surveyapp.activity
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
+import android.content.res.ColorStateList
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.data.base.BaseActivity
-import com.example.data.requests.UploadAnswerRequest
-import com.example.surveyapp.utils.Dbhelper
 import com.example.data.response.DownloadedSurveyListModel
 import com.example.surveyapp.HomeViewModel
-import com.example.surveyapp.adapter.DownloadedSurveyListRecyclerAdapter
 import com.example.surveyapp.R
-import com.example.surveyapp.ResponseItem
 import com.example.surveyapp.adapter.TakeSurveyRecyclerAdapter
-import com.example.surveyapp.adapter.ViewPagerAdapter
 import com.example.surveyapp.databinding.SettingsActivityBinding
-import com.example.surveyapp.mPrefs
-import okhttp3.MultipartBody
-import java.io.File
-import kotlin.random.Random
+import com.example.surveyapp.utils.Dbhelper
+
 
 class DownloadedSurveyActivity : BaseActivity() ,OnCLick {
 
@@ -58,6 +54,13 @@ class DownloadedSurveyActivity : BaseActivity() ,OnCLick {
         s1 = sharedPreferences!!.getString("loginuserID", "").toString()
         db = Dbhelper(this, null)
 
+        binding.fabBtn.imageTintList = ColorStateList.valueOf(Color.rgb(250, 250, 250))
+        binding.fabBtn.setOnClickListener {
+
+            val  intent = Intent(this, TakenSurveyActivity::class.java)
+            startActivity(intent)
+
+        }
 
        // setObservers()
         getDBData()
@@ -73,7 +76,7 @@ class DownloadedSurveyActivity : BaseActivity() ,OnCLick {
         this.spId = spId
         this.sid = sid
         this.mPosition = position
-        Log.e("TAG90", "onClick: $sid",)
+        Log.e("TAG90", "onClick: $sid")
 
         //viewModel.getShow(s1, "1")
 
@@ -320,7 +323,8 @@ class DownloadedSurveyActivity : BaseActivity() ,OnCLick {
             }
 
         } catch (e: Exception) {
-            Log.e("EOORO", "onCreate: $e",)
+            Log.e("EOORO", "onCreate: $e")
         }
     }
+
 }

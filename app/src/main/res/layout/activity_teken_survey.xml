@@ -19,7 +19,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_downloaded_survey_list"/>
+        tools:listitem="@layout/item_downloaded_survey_list"
+        app:stackFromEnd="true"
+        app:reverseLayout="true"/>
 
 
 </RelativeLayout>

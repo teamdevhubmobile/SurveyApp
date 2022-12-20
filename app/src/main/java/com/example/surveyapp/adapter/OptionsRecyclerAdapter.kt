@@ -94,7 +94,7 @@ class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Con
 
                     //  listenerPosition.opCheckListener(position)
 
-                    Toast.makeText(context, "1", Toast.LENGTH_SHORT).show()
+                   // Toast.makeText(context, "1", Toast.LENGTH_SHORT).show()
 
                     // Toast.makeText(context, "${holder.binding.checkbox.text.toString()}", Toast.LENGTH_SHORT).show()
 
@@ -147,7 +147,7 @@ class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Con
                     listener.onOptionClick(mList[position], qId)
                     // listenerPosition.opCheckListener(position)
                     // Toast.makeText(context, "${holder.binding.checkbox.text.toString()}", Toast.LENGTH_SHORT).show()
-                    Toast.makeText(context, "2", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(context, "2", Toast.LENGTH_SHORT).show()
 
                     //   }else if(!type.equals("2")){
 

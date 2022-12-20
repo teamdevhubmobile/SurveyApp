@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Extracted_Code/SurveyApp2/app/src/main/res/drawable/ic_baseline_history_24.xml" value="0.168" />
         <entry key="..\:/Extracted_Code/SurveyApp2/app/src/main/res/layout/activity_customer_detail.xml" value="0.25" />
         <entry key="..\:/Extracted_Code/SurveyApp2/app/src/main/res/layout/activity_downloaded_customer_detail.xml" value="0.25" />
         <entry key="..\:/Extracted_Code/SurveyApp2/app/src/main/res/layout/activity_downloaded_survey.xml" value="0.25" />
