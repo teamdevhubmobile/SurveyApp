@@ -67,7 +67,7 @@ class OptionsRecyclerAdapter(var mList: ArrayList<OptionItem>, var context : Con
 
         if (type.equals("1") || oftype.equals("1")){
 
-            holder.binding.checkbox.setOnCheckedChangeListener { buttonView, isChecked ->
+                holder.binding.checkbox.setOnCheckedChangeListener { buttonView, isChecked ->
                 if (isChecked) {
 
                     if (!answerListCheck.isNullOrEmpty()){

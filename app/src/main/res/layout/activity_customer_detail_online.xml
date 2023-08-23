@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data class="CustomerDetailOnlineActivityBinding"/>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.CustomerDetailOnlineActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="General Information"
+        android:textStyle="bold"
+        android:textSize="@dimen/_15sdp"
+        android:textColor="@color/black"
+        android:layout_margin="@dimen/_15sdp"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/_5sdp"
+        android:gravity="center_vertical"
+        app:boxBackgroundColor="@color/white"
+        app:boxBackgroundMode="outline">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/fullname_Edt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Full Name"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <RadioButton
+            android:id="@+id/radio_male"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Male"
+            android:layout_marginLeft="@dimen/_10sdp"/>
+
+        <RadioButton
+            android:id="@+id/radio_female"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Female"
+            android:layout_marginLeft="@dimen/_10sdp"/>
+
+    </RadioGroup>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/_5sdp"
+        android:gravity="center_vertical"
+        app:boxBackgroundColor="@color/white"
+        app:boxBackgroundMode="outline">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/mobile_Edt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Mobile No."
+            android:singleLine="true"
+            android:maxLength="10"
+            android:inputType="number"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/_5sdp"
+        android:gravity="center_vertical"
+        app:boxBackgroundColor="@color/white"
+        app:boxBackgroundMode="outline">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/age_Edt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Age"
+            android:singleLine="true"
+            android:maxLength="3"
+            android:inputType="number"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/_5sdp"
+        android:gravity="center_vertical"
+        app:boxBackgroundColor="@color/white"
+        app:boxBackgroundMode="outline">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/address_Edt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Address"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/submit_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/_15sdp"/>
+
+</LinearLayout>
+</layout>

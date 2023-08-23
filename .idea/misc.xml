@@ -1,14 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Extracted_Code/SurveyApp2/app/src/main/res/drawable/ic_baseline_history_24.xml" value="0.168" />
         <entry key="..\:/Extracted_Code/SurveyApp2/app/src/main/res/layout/activity_customer_detail.xml" value="0.25" />
+        <entry key="..\:/Extracted_Code/SurveyApp2/app/src/main/res/layout/activity_customer_detail_online.xml" value="0.25" />
         <entry key="..\:/Extracted_Code/SurveyApp2/app/src/main/res/layout/activity_downloaded_customer_detail.xml" value="0.25" />
-        <entry key="..\:/Extracted_Code/SurveyApp2/app/src/main/res/layout/activity_downloaded_survey.xml" value="0.25" />
+        <entry key="..\:/Extracted_Code/SurveyApp2/app/src/main/res/layout/activity_downloaded_survey.xml" value="0.12" />
         <entry key="..\:/Extracted_Code/SurveyApp2/app/src/main/res/layout/activity_downloaded_survey_ouestion.xml" value="0.25" />
         <entry key="..\:/Extracted_Code/SurveyApp2/app/src/main/res/layout/activity_login.xml" value="0.25" />
+        <entry key="..\:/Extracted_Code/SurveyApp2/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Extracted_Code/SurveyApp2/app/src/main/res/layout/activity_splash.xml" value="0.25" />
         <entry key="..\:/Extracted_Code/SurveyApp2/app/src/main/res/layout/activity_survey_ouestions.xml" value="0.25" />
         <entry key="..\:/Extracted_Code/SurveyApp2/app/src/main/res/layout/activity_teken_survey.xml" value="0.25" />
         <entry key="..\:/Extracted_Code/SurveyApp2/app/src/main/res/layout/activity_uploaded_question.xml" value="0.25" />
@@ -30,7 +32,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

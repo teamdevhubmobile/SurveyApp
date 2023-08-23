@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -75,7 +76,7 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface,OpCheckL
 
     var pagenumber = 0
 
-
+    var forcheckState = ""
 
 
     val answr = arrayListOf<List<List<String>>>()
@@ -101,19 +102,31 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface,OpCheckL
 
         surveId = intent.getStringExtra("surveyId").toString()
         surveyName = intent.getStringExtra("surveyName").toString()
+        full_name = intent.getStringExtra("name").toString()
+        age =  intent.getStringExtra("age").toString()
+        gender = intent.getStringExtra("gender").toString()
+        phone = intent.getStringExtra("mobile").toString()
+        address = intent.getStringExtra("address").toString()
 
          s1 = sharedPreferences!!.getString("loginuserID","").toString()
 
+        forcheckState = intent.getStringExtra("forcheckstate").toString()
 
-        startRecording()
+        if (forcheckState.equals("true")){
+            startRecording()
+        }
+
+
+/*
 
 
       //  Toast.makeText(this, "$s1", Toast.LENGTH_SHORT).show()
 
-        /*if (btnpoint != 0){
+if (btnpoint != 0){
 
-           */
-        /* btnpoint--
+
+
+ btnpoint--
             binding.recordBtn.setImageDrawable(getDrawable(R.drawable.mic_microphone_icon))
             second = -1
             minute = 0
@@ -121,7 +134,7 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface,OpCheckL
             binding.timerText.text="00:00"
             mRecorder!!.stop()
             //showImage()
-            //playAudio()*//*
+            //playAudio()
 
             autoStop()
 
@@ -132,10 +145,10 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface,OpCheckL
             btnpoint++
 
         }
-*/
 
 
-/*
+
+
         binding.recordBtn.setOnClickListener {
 
             if (btnpoint != 0){
@@ -160,59 +173,70 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface,OpCheckL
 
 
         }
+
+
+
 */
 
 
 
+        if (forcheckState.equals("false")){
 
-        binding.fabBtn.setOnClickListener {
+            binding.fabBtn.isVisible = true
+            binding.submitBtn.isVisible = false
+            binding.fabBtn.setOnClickListener {
 
-           // dbhelper.addTakenSurveyTable("","","","","","","")
+                // dbhelper.addTakenSurveyTable("","","","","","","")
 
-            var surveyExits =   dbhelper.addSurvey(surveId.toString(),surveyName.toString(),"this will show after uploaded",false,false)
-
-
-            Log.e("TAGid00p", "onCreate: ${dbhelper.servayPId}")
-
-
-            var spid = dbhelper.servayPId.toInt()
-
-            if (!surveyExits){
-
-                if (!responseList.isNullOrEmpty()) {
+                var surveyExits =   dbhelper.addSurvey(surveId.toString(),surveyName.toString(),"this will show after uploaded",false,false)
 
 
-                    for (i in 0 until responseList.size){
+                Log.e("TAGid00p", "onCreate: ${dbhelper.servayPId}")
+
+
+                var spid = dbhelper.servayPId.toInt()
+
+                if (!surveyExits){
+
+                    if (!responseList.isNullOrEmpty()) {
+
+
+                        for (i in 0 until responseList.size){
 
 
 
-                        dbhelper.addQuestion(
+                            dbhelper.addQuestion(
 
-                            responseList.get(i).questionBankID.toString(),
-                            responseList.get(i).question.toString(),
-                            responseList.get(i).option as ArrayList<OptionItem>,
+                                responseList.get(i).questionBankID.toString(),
+                                responseList.get(i).question.toString(),
+                                responseList.get(i).option as ArrayList<OptionItem>,
 
-                            spid,surveId.toInt(),
-                            responseList.get(i).typeNumber.toString()
+                                spid,surveId.toInt(),
+                                responseList.get(i).typeNumber.toString()
 
-                        )
+                            )
+                        }
+
+                    }else {
+
+                        //   Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
                     }
 
-                }else {
+                    Toast.makeText(this, "Survey Downloaded Succesfully", Toast.LENGTH_SHORT).show()
+                }else{
 
-                 //   Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Survey Already Exists", Toast.LENGTH_SHORT).show()
+
                 }
-            }else{
-
-                Toast.makeText(this, "Survey Already Exists", Toast.LENGTH_SHORT).show()
-                
             }
-        }
 
+        }else if(forcheckState.equals("true")){
 
-        binding.submitBtn.setOnClickListener {
+            binding.submitBtn.isVisible = true
+            binding.fabBtn.isVisible = false
+            binding.submitBtn.setOnClickListener {
 
-            /*val answermap = hashMapOf<String, String>()
+                /*   *//*val answermap = hashMapOf<String, String>()
 
 
             var newSList = mViewPagerAdapter.getList()
@@ -272,11 +296,18 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface,OpCheckL
                 Log.e("TAG987", "onCreate: $item")
             }*/
 
-            autoStop()
-            submitApiCall()
-            restartApp()
+                autoStop()
+                submitApiCall()
+                restartApp()
+
+            }
 
         }
+
+
+
+
+
 
         //viewPager = findViewById(R.id.viewPager)
 
@@ -328,7 +359,7 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface,OpCheckL
 
     private fun setObservers() {
                 observeQuestion()
-                observerShow()
+               // observerShow()
                 observeUpdateQandA()
     }
 
@@ -395,7 +426,7 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface,OpCheckL
             })
     }
 
-    private fun observerShow() {
+/*    private fun observerShow() {
 
         viewModel.getShowLiveData()
             .observe(this@SurveyQuestionsActivity, Observer {
@@ -408,18 +439,19 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface,OpCheckL
                    phone =  it.userExamCheck?.phone.toString()
                     address = it.userExamCheck?.address.toString()
 
-                  /*  Log.e("TAG", "observerShow55: ${it.userExamCheck?.fullName.toString()}")
+                  */
+    /*  Log.e("TAG", "observerShow55: ${it.userExamCheck?.fullName.toString()}")
                     Log.e("TAG", "observerShow55: ${it.userExamCheck?.gender.toString()}")
                     Log.e("TAG", "observerShow55: ${it.userExamCheck?.address.toString()}")
                     Log.e("TAG", "observerShow55: ${it.userExamCheck?.phone.toString()}")
                     Log.e("TAG", "observerShow55: ${it.userExamCheck?.age.toString()}")
 
                     Log.e("TAG", "this is iit : $it")
-*/
+*//*
                 }
 
             })
-    }
+    }*/
 
 
     override fun onOptionClick(item: OptionItem,qId: String) {
@@ -636,9 +668,14 @@ class SurveyQuestionsActivity : BaseActivity(),OptionsListenerInterface,OpCheckL
                     DialogInterface.BUTTON_POSITIVE -> {
                         // on below line we are displaying a toast message.
                       //  Toast.makeText(this, "Yes clicked", Toast.LENGTH_SHORT).show()
-                        autoStop()
-                        submitApiCall()
-                        restartApp()
+                        if (forcheckState.equals("true")){
+                            autoStop()
+                            submitApiCall()
+                            restartApp()
+
+                        }else if (forcheckState.equals("false")){
+                            restartApp()
+                        }
 
 
                     }

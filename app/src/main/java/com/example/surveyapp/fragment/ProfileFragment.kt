@@ -10,6 +10,7 @@ import com.example.surveyapp.R
 import com.example.surveyapp.databinding.ProfileFragmentBinding
 import com.example.surveyapp.databinding.SurveyListBinding
 import com.example.surveyapp.mPrefs
+import com.example.surveyapp.utils.Constants
 
 class Profile : Fragment() {
 
@@ -22,8 +23,10 @@ class Profile : Fragment() {
 
         binding = ProfileFragmentBinding.inflate(inflater,container,false)
 
-        //binding.usernameTxt.setText(mPrefs.prefAudioFileDetails?.filename.toString())
-        Log.e("TAG", "onCreateView: ${mPrefs.prefAudioFileDetails?.filename.toString()}", )
+        binding.usernameTxt.setText("Username :- ${mPrefs.prefUserDetails?.userdata?.username}")
+        binding.passwordTxt.setText("User ID :- ${mPrefs.prefUserDetails?.userdata?.loginuserID}")
+
+        Log.e("TAG", "onCreateView: ${Constants.BaseURl+ mPrefs.prefUserDetails?.userdata?.photo}", )
 
         return binding.root
     }

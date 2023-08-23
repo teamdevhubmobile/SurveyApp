@@ -23,9 +23,10 @@
 
         <CheckBox
             android:id="@+id/checkbox"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@{model.optionID+' '+model.name}"/>
+            android:text="@{model.name}"
+            android:layout_gravity="left"/>
 <!--        <TextView-->
 <!--            android:id="@+id/checkboxs"-->
 <!--            android:layout_width="match_parent"-->

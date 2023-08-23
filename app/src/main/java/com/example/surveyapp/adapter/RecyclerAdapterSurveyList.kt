@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.survey.ResponseItem
 import com.example.surveyapp.activity.CustomerDetailActivity
+import com.example.surveyapp.activity.CustomerDetailOnlineActivity
 import com.example.surveyapp.activity.SurveyQuestionsActivity
 import com.example.surveyapp.databinding.MySurveylistBinding
 import com.example.surveyapp.interfaces.OptionsListenerInterface
@@ -45,21 +46,49 @@ class RecyclerAdapterSurveyList(var mList: ArrayList<ResponseItem>, val context 
             val name = mList[position].name
             Toast.makeText(context, "$name Survey Downloaded ", Toast.LENGTH_SHORT).show()
         }
-        holder.binding.nametext.setOnClickListener {
+       /* holder.binding.nametext.setOnClickListener {
 
             surveyIdListener.onSurveyId(mList[position].surveyId.toString())
+
+            intent = Intent(context, CustomerDetailOnlineActivity::class.java)
+            //intent = Intent(context, CustomerDetailActivity::class.java)
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.putExtra("surveyId",mList[position].surveyId.toString())
+            intent.putExtra("surveyName",mList[position].name.toString())
+            intent.putExtra("forcheckstate","surveyTakebtn")
+            context.startActivity(intent)
+          //  intent = Intent(context, SurveyQuestionsActivity::class.java)
+           *//* intent.putExtra("id", mList[position].surveyId.toString())
+            intent.putExtra("nid", mList[position].name.toString())
+           context.startActivity(intent)*//*
+        }*/
+        holder.binding.takeSurveyButton.setOnClickListener {
+
+            surveyIdListener.onSurveyId(mList[position].surveyId.toString())
+
+            intent = Intent(context, CustomerDetailOnlineActivity::class.java)
+            //intent = Intent(context, CustomerDetailActivity::class.java)
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.putExtra("surveyId",mList[position].surveyId.toString())
+            intent.putExtra("surveyName",mList[position].name.toString())
+            intent.putExtra("forcheckstate","surveyTakebtn")
+            context.startActivity(intent)
+          //  intent = Intent(context, SurveyQuestionsActivity::class.java)
+           /* intent.putExtra("id", mList[position].surveyId.toString())
+            intent.putExtra("nid", mList[position].name.toString())
+           context.startActivity(intent)*/
+        }
+
+        holder.binding.downloadImg.setOnClickListener {
 
             intent = Intent(context, SurveyQuestionsActivity::class.java)
             //intent = Intent(context, CustomerDetailActivity::class.java)
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             intent.putExtra("surveyId",mList[position].surveyId.toString())
             intent.putExtra("surveyName",mList[position].name.toString())
-           // Toast.makeText(context, "$surveyId", Toast.LENGTH_SHORT).show()
+            intent.putExtra("forcheckstate","false")
             context.startActivity(intent)
-          //  intent = Intent(context, SurveyQuestionsActivity::class.java)
-           /* intent.putExtra("id", mList[position].surveyId.toString())
-            intent.putExtra("nid", mList[position].name.toString())
-           context.startActivity(intent)*/
+
         }
 
     }

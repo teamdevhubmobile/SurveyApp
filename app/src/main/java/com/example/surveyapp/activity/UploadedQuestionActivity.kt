@@ -3,6 +3,7 @@ package com.example.surveyapp.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -48,14 +49,21 @@ class UploadedQuestionActivity : AppCompatActivity() {
 
 
                 questionlist = it.response?.question as ArrayList<String>
-                answerlist = it.response?.answer as ArrayList<String>
 
+                if(it.response.answer.isNullOrEmpty()){
 
-                questionlist.forEachIndexed { index, s ->
+                    Toast.makeText(this, "Answers Not Available", Toast.LENGTH_SHORT).show()
 
-                    data.add(UploadedQAModel(questionlist.get(index),answerlist.get(index)))
+                }else{
+
+                    answerlist = it.response?.answer as ArrayList<String>
+                    questionlist.forEachIndexed { index, s ->
+
+                        data.add(UploadedQAModel(questionlist.get(index), answerlist.get(index)))
+                    }
 
                 }
+
 
                 data.forEach {
                     Log.e("TAG", "observeSurvey: ${it.question}  ans : ${it.answer}", )
