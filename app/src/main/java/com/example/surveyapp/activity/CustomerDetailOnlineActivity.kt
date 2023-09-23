@@ -21,6 +21,7 @@ class CustomerDetailOnlineActivity : AppCompatActivity() {
         var surveId = intent.getStringExtra("surveyId").toString()
         var surveyName = intent.getStringExtra("surveyName").toString()
 
+        //radioGroup
         binding.radioGroup.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { group, checkedId ->
             val intSelectButton: Int = binding.radioGroup!!.checkedRadioButtonId
             val btn = findViewById<RadioButton>(intSelectButton)
